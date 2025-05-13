@@ -40,11 +40,11 @@ def get_mean_std_from_json_files(json_files):
 
 
 llama2_speech_files = [
-    "SOLAMI/models/vla/infer_output/llama2_speech_inference-final-0_evaluation",
-    "SOLAMI/models/vla/infer_output/llama2_speech_inference-final-1_evaluation",
-    "SOLAMI/models/vla/infer_output/llama2_speech_inference-final-2_evaluation",
-    "SOLAMI/models/vla/infer_output/llama2_speech_inference-final-3_evaluation",
-    "SOLAMI/models/vla/infer_output/llama2_speech_inference-final-4_evaluation",
+    "/root/pengyang/codebase/SOLAMI/models/vla/infer_output/llama2_speech_inference-final-0_evaluation",
+    "/root/pengyang/codebase/SOLAMI/models/vla/infer_output/llama2_speech_inference-final-1_evaluation",
+    "/root/pengyang/codebase/SOLAMI/models/vla/infer_output/llama2_speech_inference-final-2_evaluation",
+    "/root/pengyang/codebase/SOLAMI/models/vla/infer_output/llama2_speech_inference-final-3_evaluation",
+    "/root/pengyang/codebase/SOLAMI/models/vla/infer_output/llama2_speech_inference-final-4_evaluation",
 ]
 
 llama2_metric_files = [os.path.join(file_path, "metrics.json") for file_path in llama2_speech_files]
@@ -59,11 +59,11 @@ print("llama2_speech_results_gpt4o: ", llama2_speech_results_gpt4o)
 
 
 solami_full_files = [
-    "SOLAMI/models/vla/infer_output/it_full_checkpoint-768-final-0_evaluation",
-    "SOLAMI/models/vla/infer_output/it_full_checkpoint-768-final-1_evaluation",
-    "SOLAMI/models/vla/infer_output/it_full_checkpoint-768-final-2_evaluation",
-    "SOLAMI/models/vla/infer_output/it_full_checkpoint-768-final-3_evaluation",
-    "SOLAMI/models/vla/infer_output/it_full_checkpoint-768-final-4_evaluation",
+    "/root/pengyang/codebase/SOLAMI/models/vla/infer_output/it_full_checkpoint-768-final-0_evaluation",
+    "/root/pengyang/codebase/SOLAMI/models/vla/infer_output/it_full_checkpoint-768-final-1_evaluation",
+    "/root/pengyang/codebase/SOLAMI/models/vla/infer_output/it_full_checkpoint-768-final-2_evaluation",
+    "/root/pengyang/codebase/SOLAMI/models/vla/infer_output/it_full_checkpoint-768-final-3_evaluation",
+    "/root/pengyang/codebase/SOLAMI/models/vla/infer_output/it_full_checkpoint-768-final-4_evaluation",
 ]
 
 solami_full_metric_files = [os.path.join(file_path, "metrics.json") for file_path in solami_full_files]
@@ -78,11 +78,11 @@ print("solami_full_results_gpt4o: ", solami_full_results_gpt4o)
 
 
 solaimi_no_pretrain_files = [
-    "SOLAMI/models/vla/infer_output/it_full_no_pretrain_checkpoint-768_evaluation",
-    "SOLAMI/models/vla/infer_output/it_full_no_pretrain_checkpoint-768-final-1_evaluation",
-    "SOLAMI/models/vla/infer_output/it_full_checkpoint_no_pretrain-768-final-2_evaluation",
-    "SOLAMI/models/vla/infer_output/it_full_checkpoint_no_pretrain-768-final-3_evaluation",
-    "SOLAMI/models/vla/infer_output/it_full_checkpoint_no_pretrain-768-final-4_evaluation",
+    "/root/pengyang/codebase/SOLAMI/models/vla/infer_output/it_full_no_pretrain_checkpoint-768_evaluation",
+    "/root/pengyang/codebase/SOLAMI/models/vla/infer_output/it_full_no_pretrain_checkpoint-768-final-1_evaluation",
+    "/root/pengyang/codebase/SOLAMI/models/vla/infer_output/it_full_checkpoint_no_pretrain-768-final-2_evaluation",
+    "/root/pengyang/codebase/SOLAMI/models/vla/infer_output/it_full_checkpoint_no_pretrain-768-final-3_evaluation",
+    "/root/pengyang/codebase/SOLAMI/models/vla/infer_output/it_full_checkpoint_no_pretrain-768-final-4_evaluation",
 ]
 
 solaimi_no_pretrain_metric_files = [os.path.join(file_path, "metrics.json") for file_path in solaimi_no_pretrain_files]
@@ -97,11 +97,11 @@ print("solaimi_no_pretrain_results_gpt4o: ", solaimi_no_pretrain_results_gpt4o)
 
 
 dlp_motiongpt_files = [
-    "SOLAMI/models/vla/infer_output/llama2-dlp-motiongpt-final-0_evaluation",
-    "SOLAMI/models/vla/infer_output/llama2-dlp-motiongpt-final-1_evaluation",
-    "SOLAMI/models/vla/infer_output/llama2-dlp-motiongpt-final-2_evaluation",
-    "SOLAMI/models/vla/infer_output/llama2-dlp-motiongpt-final-3_evaluation",
-    "SOLAMI/models/vla/infer_output/llama2-dlp-motiongpt-final-4_evaluation",
+    "/root/pengyang/codebase/SOLAMI/models/vla/infer_output/llama2-dlp-motiongpt-final-0_evaluation",
+    "/root/pengyang/codebase/SOLAMI/models/vla/infer_output/llama2-dlp-motiongpt-final-1_evaluation",
+    "/root/pengyang/codebase/SOLAMI/models/vla/infer_output/llama2-dlp-motiongpt-final-2_evaluation",
+    "/root/pengyang/codebase/SOLAMI/models/vla/infer_output/llama2-dlp-motiongpt-final-3_evaluation",
+    "/root/pengyang/codebase/SOLAMI/models/vla/infer_output/llama2-dlp-motiongpt-final-4_evaluation",
 ]
 
 dlp_motiongpt_metric_files = [os.path.join(file_path, "metrics.json") for file_path in dlp_motiongpt_files]
@@ -116,11 +116,11 @@ print("dlp_motiongpt_results_gpt4o: ", dlp_motiongpt_results_gpt4o)
 
 
 dlp_motiongpt_retrieval_files = [
-    "SOLAMI/models/vla/infer_output/llama2-dlp-motiongpt-retrieval-final-0_evaluation",
-    "SOLAMI/models/vla/infer_output/llama2-dlp-motiongpt-retrieval-final-1_evaluation",
-    "SOLAMI/models/vla/infer_output/llama2-dlp-motiongpt-retrieval-final-2_evaluation",
-    "SOLAMI/models/vla/infer_output/llama2-dlp-motiongpt-retrieval-final-3_evaluation",
-    "SOLAMI/models/vla/infer_output/llama2-dlp-motiongpt-retrieval-final-4_evaluation",
+    "/root/pengyang/codebase/SOLAMI/models/vla/infer_output/llama2-dlp-motiongpt-retrieval-final-0_evaluation",
+    "/root/pengyang/codebase/SOLAMI/models/vla/infer_output/llama2-dlp-motiongpt-retrieval-final-1_evaluation",
+    "/root/pengyang/codebase/SOLAMI/models/vla/infer_output/llama2-dlp-motiongpt-retrieval-final-2_evaluation",
+    "/root/pengyang/codebase/SOLAMI/models/vla/infer_output/llama2-dlp-motiongpt-retrieval-final-3_evaluation",
+    "/root/pengyang/codebase/SOLAMI/models/vla/infer_output/llama2-dlp-motiongpt-retrieval-final-4_evaluation",
 ]
 
 dlp_motiongpt_retrieval_metric_files = [os.path.join(file_path, "metrics.json") for file_path in dlp_motiongpt_retrieval_files]

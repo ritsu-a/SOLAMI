@@ -1,6 +1,6 @@
 import sys
 sys.path.append("./")
-sys.path.append("./anygpt/src")
+sys.path.append("./anygpt")
 import torch
 import torchaudio
 from speechtokenizer import SpeechTokenizer
@@ -12,9 +12,9 @@ import re
 import json
 
 
-speech_tokenizer_config = "SOLAMI/extra/AnyGPT-speech-modules/speechtokenizer/config.json"
-speech_tokenizer_path = "SOLAMI/extra/AnyGPT-speech-modules/speechtokenizer/ckpt.dev"
-soundstorm_path = "SOLAMI/extra/AnyGPT-speech-modules/soundstorm/speechtokenizer_soundstorm_mls.pt"
+speech_tokenizer_config = "/root/pengyang/codebase/SOLAMI/extra/AnyGPT-speech-modules/speechtokenizer/config.json"
+speech_tokenizer_path = "/root/pengyang/codebase/SOLAMI/extra/AnyGPT-speech-modules/speechtokenizer/ckpt.dev"
+soundstorm_path = "/root/pengyang/codebase/SOLAMI/extra/AnyGPT-speech-modules/soundstorm/speechtokenizer_soundstorm_mls.pt"
 DEVICE="cuda"
 
 speech_tokenizer = SpeechTokenizer.load_from_checkpoint(speech_tokenizer_config, speech_tokenizer_path)        
@@ -77,21 +77,21 @@ data_2_codes = encode_speech(data_2_path)
 
 
 data_1_decode_only = decode_speech(data_1_codes)
-torchaudio.save("SOLAMI/extra/AnyGPT/infer_output/base/data_1_decode_only.wav", 
+torchaudio.save("/root/pengyang/codebase/SOLAMI/extra/AnyGPT/infer_output/base/data_1_decode_only.wav", 
                 data_1_decode_only, 
                 speech_tokenizer.sample_rate)
 
 data_1_decode_by_data_2 = decode_speech(data_1_codes, data_2_path)
-torchaudio.save("SOLAMI/extra/AnyGPT/infer_output/base/data_1_decode_by_data_2.wav",
+torchaudio.save("/root/pengyang/codebase/SOLAMI/extra/AnyGPT/infer_output/base/data_1_decode_by_data_2.wav",
                 data_1_decode_by_data_2, 
                 speech_tokenizer.sample_rate)
 
 data_2_decode_only = decode_speech(data_2_codes)
-torchaudio.save("SOLAMI/extra/AnyGPT/infer_output/base/data_2_decode_only.wav",
+torchaudio.save("/root/pengyang/codebase/SOLAMI/extra/AnyGPT/infer_output/base/data_2_decode_only.wav",
                 data_2_decode_only, 
                 speech_tokenizer.sample_rate)
 
 data_2_decode_by_data_1 = decode_speech(data_2_codes, data_1_path)
-torchaudio.save("SOLAMI/extra/AnyGPT/infer_output/base/data_2_decode_by_data_1.wav",
+torchaudio.save("/root/pengyang/codebase/SOLAMI/extra/AnyGPT/infer_output/base/data_2_decode_by_data_1.wav",
                 data_2_decode_by_data_1, 
                 speech_tokenizer.sample_rate)

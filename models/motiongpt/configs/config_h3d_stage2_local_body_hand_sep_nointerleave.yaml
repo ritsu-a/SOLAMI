@@ -22,7 +22,7 @@ TRAIN:
   RESUME: '' # Resume training from this path
   PRETRAINED: '' # Preatrained model path
   # PRETRAINED_VAE: checkpoints/MotionGPT-base/motiongpt_s3_h3d.tar # Vae model path
-  PRETRAINED_VAE: SOLAMI/models/motiongpt/experiments/mgpt/VQVAE_HumanML3D_Local_Body_Hand_Sep/checkpoints/epoch=2999.ckpt
+  PRETRAINED_VAE: /root/pengyang/codebase/SOLAMI/models/motiongpt/experiments/mgpt/VQVAE_HumanML3D_Local_Body_Hand_Sep/checkpoints/epoch=2999.ckpt
 
   OPTIM:
     target: AdamW
@@ -37,7 +37,7 @@ EVAL:
   SPLIT: test
 
 TEST:
-  CHECKPOINTS: SOLAMI/models/motiongpt/experiments/mgpt/Pretrain_HumanML3D_GPT2_Local_Body_Hand_Sep_NoInterleave/checkpoints/last.ckpt
+  CHECKPOINTS: /root/pengyang/codebase/SOLAMI/models/motiongpt/experiments/mgpt/Pretrain_HumanML3D_GPT2_Local_Body_Hand_Sep_NoInterleave/checkpoints/last.ckpt
   SPLIT: test
   BATCH_SIZE: 32 # training Batch size
   # SAVE_PREDICTIONS: True

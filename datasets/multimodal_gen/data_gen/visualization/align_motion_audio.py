@@ -11,13 +11,13 @@ def get_wav_length(file_path):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--json_path", type=str, default='SOLAMI/datasets/multimodal_gen/data_gen/output/sim1/sim1__1200_0_if_sc.json')
+    parser.add_argument("--json_path", type=str, default='/root/pengyang/codebase/SOLAMI/datasets/multimodal_gen/data_gen/output/sim1/sim1__1200_0_if_sc.json')
     args = parser.parse_args()
     json_path = args.json_path
     
     with open(json_path, 'r') as f:
         conv_data = json.load(f)
-    audio_dir = "SOLAMI/datasets/multimodal_gen/data_gen/output/sim1_audio"
+    audio_dir = "/root/pengyang/codebase/SOLAMI/datasets/multimodal_gen/data_gen/output/sim1_audio"
     basename = os.path.basename(json_path)
     audio_dir = os.path.join(audio_dir, basename.split('.')[0])
     
@@ -37,7 +37,7 @@ if __name__ == "__main__":
         'interx': 'SOLAMI_data/Inter-X',
     }
     
-    align_dir = "SOLAMI/datasets/multimodal_gen/data_gen/output/sim1_align"
+    align_dir = "/root/pengyang/codebase/SOLAMI/datasets/multimodal_gen/data_gen/output/sim1_align"
     os.makedirs(align_dir, exist_ok=True)
     align_path = os.path.join(align_dir, basename)
     

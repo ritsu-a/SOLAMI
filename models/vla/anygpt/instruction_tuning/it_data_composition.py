@@ -1,7 +1,7 @@
 import sys
 import os
-sys.path.append("SOLAMI/models/vla/")
-sys.path.append("SOLAMI/models/vla/anygpt/src")
+sys.path.append("/root/pengyang/codebase/SOLAMI/models/vla/")
+sys.path.append("/root/pengyang/codebase/SOLAMI/models/vla/anygpt")
 import json
 from tqdm import tqdm
 import torch
@@ -95,7 +95,7 @@ if os.path.exists(train_save_file) and os.path.exists(test_save_file):
 else:
     print(f"Train or test data items not found, start to generate")
 
-    source_data_dir = "SOLAMI/multimodal_gen/data_gen/output/sim_all"
+    source_data_dir = "/root/pengyang/codebase/SOLAMI/multimodal_gen/data_gen/output/sim_all"
     json_file_list = os.listdir(source_data_dir)
 
     valid_data_items = []
@@ -145,8 +145,8 @@ else:
 
 
 #### tokenize the data items
-speech_tokenizer_config = "SOLAMI/extra/AnyGPT-speech-modules/speechtokenizer/config.json"
-speech_tokenizer_path = "SOLAMI/extra/AnyGPT-speech-modules/speechtokenizer/ckpt.dev"
+speech_tokenizer_config = "/root/pengyang/codebase/SOLAMI/extra/AnyGPT-speech-modules/speechtokenizer/config.json"
+speech_tokenizer_path = "/root/pengyang/codebase/SOLAMI/extra/AnyGPT-speech-modules/speechtokenizer/ckpt.dev"
 
 DEVICE = f"cuda:0"
 

@@ -1,7 +1,7 @@
 import os
 import sys
-sys.path.append('SOLAMI/models/vla/anygpt/src')
-sys.path.append('SOLAMI/models/vla')
+sys.path.append('/root/pengyang/codebase/SOLAMI/models/vla/anygpt')
+sys.path.append('/root/pengyang/codebase/SOLAMI/models/vla')
 os.environ["TRANSFORMERS_CACHE"] = "~/.cache/huggingface/hub"
 import numpy as np
 import torch
@@ -66,9 +66,9 @@ def get_motion_utils():
 
 
 data_dirs = [
-    # "SOLAMI/models/vla/infer_output/pretrain_checkpoint-4096/motion",
-    # "SOLAMI/models/vla/infer_output/pretrain_checkpoint-4096/speech_anyinstruct",
-    "SOLAMI/models/vla/infer_output/pretrain_checkpoint-4096-final/motion",
+    # "/root/pengyang/codebase/SOLAMI/models/vla/infer_output/pretrain_checkpoint-4096/motion",
+    # "/root/pengyang/codebase/SOLAMI/models/vla/infer_output/pretrain_checkpoint-4096/speech_anyinstruct",
+    "/root/pengyang/codebase/SOLAMI/models/vla/infer_output/pretrain_checkpoint-4096-final/motion",
     ]
 
 

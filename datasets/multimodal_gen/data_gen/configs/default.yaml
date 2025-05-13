@@ -34,7 +34,7 @@ text_embedding_settings:
 
 save_settings:
   save_data: True
-  save_path: 'SOLAMI/datasets/multimodal_gen/data_gen/output'
+  save_path: '/root/pengyang/codebase/SOLAMI/datasets/multimodal_gen/data_gen/output'
   save_format: 'json' # 'json', 'csv'
 
 

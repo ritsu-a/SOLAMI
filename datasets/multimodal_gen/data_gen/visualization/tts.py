@@ -3,9 +3,9 @@ import sys
 os.environ['HOME'] = 'YOUR_HOME_PATH'
 sys.path.append('SOLAMI')
 project_paths = [
-    'SOLAMI/extra/ChatTTS',
-    'SOLAMI/extra/OpenVoice',
-    'SOLAMI/extra/MeloTTS',
+    '/root/pengyang/codebase/SOLAMI/extra/ChatTTS',
+    '/root/pengyang/codebase/SOLAMI/extra/OpenVoice',
+    '/root/pengyang/codebase/SOLAMI/extra/MeloTTS',
 ]
 for project_path in project_paths:
     project_path = os.path.realpath(project_path)
@@ -78,7 +78,7 @@ def TTS_Infer(model_name: str='openvoice-tts', voice: str ='EN-Default', input_t
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--json_path", type=str, default='SOLAMI/datasets/multimodal_gen/data_gen/output/sim1/sim1__1200_0_if_sc.json')
+    parser.add_argument("--json_path", type=str, default='/root/pengyang/codebase/SOLAMI/datasets/multimodal_gen/data_gen/output/sim1/sim1__1200_0_if_sc.json')
     args = parser.parse_args()
     
     json_path = args.json_path
@@ -96,7 +96,7 @@ if __name__ == "__main__":
         "11-45-G": "EN-US",
     }
 
-    output_dir = "SOLAMI/datasets/multimodal_gen/data_gen/output/sim1_audio"
+    output_dir = "/root/pengyang/codebase/SOLAMI/datasets/multimodal_gen/data_gen/output/sim1_audio"
     basename = os.path.basename(json_path).split('.')[0]
     output_dir = os.path.join(output_dir, basename)
     os.makedirs(output_dir, exist_ok=True)

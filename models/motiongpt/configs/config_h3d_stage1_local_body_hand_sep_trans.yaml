@@ -20,8 +20,8 @@ TRAIN:
   BATCH_SIZE: 96 # Size of batches
   END_EPOCH: 3001 # End epoch
   RESUME: '' # Resume training from this path
-  PRETRAINED: 'SOLAMI/models/motiongpt/experiments/mgpt/VQVAE_HumanML3D_Local_Body_Hand_Sep_Trans_Final/checkpoints/epoch=2999.ckpt'
-  PRETRAINED_VAE: 'SOLAMI/models/motiongpt/experiments/mgpt/VQVAE_HumanML3D_Local_Body_Hand_Sep_Trans_Final/checkpoints/epoch=2999.ckpt'
+  PRETRAINED: '/root/pengyang/codebase/SOLAMI/models/motiongpt/experiments/mgpt/VQVAE_HumanML3D_Local_Body_Hand_Sep_Trans_Final/checkpoints/epoch=2999.ckpt'
+  PRETRAINED_VAE: '/root/pengyang/codebase/SOLAMI/models/motiongpt/experiments/mgpt/VQVAE_HumanML3D_Local_Body_Hand_Sep_Trans_Final/checkpoints/epoch=2999.ckpt'
 
   OPTIM:
     target: AdamW
@@ -36,7 +36,7 @@ EVAL:
   SPLIT: test
 
 TEST:
-  CHECKPOINTS: SOLAMI/models/motiongpt/experiments/mgpt/VQVAE_HumanML3D_Local_Body_Hand_Sep_Trans_Final/checkpoints/epoch=2999.ckpt
+  CHECKPOINTS: /root/pengyang/codebase/SOLAMI/models/motiongpt/experiments/mgpt/VQVAE_HumanML3D_Local_Body_Hand_Sep_Trans_Final/checkpoints/epoch=2999.ckpt
   SPLIT: test
   BATCH_SIZE: 32 # training Batch size
   SAVE_PREDICTIONS: False

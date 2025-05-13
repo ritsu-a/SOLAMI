@@ -2,7 +2,7 @@ import os
 import pandas as pd
 
 
-data_path = "SOLAMI/datasets/multimodal_gen/data/topics/merged_topics.csv"
+data_path = "/root/pengyang/codebase/SOLAMI/datasets/multimodal_gen/data/topics/merged_topics.csv"
 
 if os.path.exists(data_path):
     df = pd.read_csv(data_path)

@@ -1,7 +1,7 @@
 import sys
 import os
-sys.path.append("SOLAMI/models/vla/")
-sys.path.append("SOLAMI/models/vla/anygpt/src")
+sys.path.append("/root/pengyang/codebase/SOLAMI/models/vla/")
+sys.path.append("/root/pengyang/codebase/SOLAMI/models/vla/anygpt")
 import torch
 import torchaudio
 from speechtokenizer import SpeechTokenizer
@@ -22,8 +22,8 @@ import pandas as pd
 
 def process_speech_data(part=0, period=4, gpu_id=0, maxlen=150000):
     DEVICE = 'cuda:%d'%gpu_id 
-    speech_tokenizer_config = "SOLAMI/extra/AnyGPT-speech-modules/speechtokenizer/config.json"
-    speech_tokenizer_path = "SOLAMI/extra/AnyGPT-speech-modules/speechtokenizer/ckpt.dev"
+    speech_tokenizer_config = "/root/pengyang/codebase/SOLAMI/extra/AnyGPT-speech-modules/speechtokenizer/config.json"
+    speech_tokenizer_path = "/root/pengyang/codebase/SOLAMI/extra/AnyGPT-speech-modules/speechtokenizer/ckpt.dev"
 
     speech_meta_path = "SOLAMI_data/audio/commonvoice_en/validated.tsv"
     speech_dir = "SOLAMI_data/audio/commonvoice_en/clips"

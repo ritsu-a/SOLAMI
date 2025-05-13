@@ -1,7 +1,7 @@
 import os
 print(os.getcwd())
 import sys
-sys.path.append("SOLAMI/models/motiongpt")
+sys.path.append("/root/pengyang/codebase/SOLAMI/models/motiongpt")
 os.environ["TRANSFORMERS_CACHE"] = "~/.cache/huggingface/hub"
 import numpy as np
 import pytorch_lightning as pl
@@ -54,7 +54,7 @@ def main():
     assert cfg.TRAIN.PRETRAINED_VAE is not None
     load_pretrained_vae(cfg, model)
 
-    save_state_dir = "SOLAMI/extra/motion_tokenizer_final"
+    save_state_dir = "/root/pengyang/codebase/SOLAMI/extra/motion_tokenizer_final"
     torch.save(model.vae_body.state_dict(), os.path.join(save_state_dir, 'body.pth'))
     torch.save(model.vae_hand.state_dict(), os.path.join(save_state_dir, 'hand.pth'))
     torch.save(model.vae_transform.state_dict(), os.path.join(save_state_dir, 'transform.pth'))

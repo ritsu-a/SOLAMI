@@ -1,6 +1,6 @@
 import os
 import sys  
-sys.path.append('SOLAMI/models/vla/anygpt/src/motiongpt')
+sys.path.append('/root/pengyang/codebase/SOLAMI/models/vla/anygpt/motiongpt')
 os.environ["TRANSFORMERS_CACHE"] = "~/.cache/huggingface/hub"
 import glob
 import torch

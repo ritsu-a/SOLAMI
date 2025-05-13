@@ -74,11 +74,11 @@ def parse_args(phase="train"):
         "--cfg_assets",
         type=str,
         required=False,
-        default="SOLAMI/models/motiongpt/configs/assets.yaml",
+        default="/root/pengyang/codebase/SOLAMI/models/motiongpt/configs/assets.yaml",
         help="config file for asset paths",
     )
 
-    cfg_defualt = "SOLAMI/models/motiongpt/configs/config_h3d_stage2_local_body_hand_sep_nointerleave.yaml"
+    cfg_defualt = "/root/pengyang/codebase/SOLAMI/models/motiongpt/configs/config_h3d_stage2_local_body_hand_sep_nointerleave.yaml"
         
     group.add_argument(
         "--cfg",

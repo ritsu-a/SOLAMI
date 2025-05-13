@@ -1,8 +1,8 @@
 import os
 import sys
-sys.path.append('SOLAMI/models/vla/anygpt/src')
-sys.path.append('SOLAMI/models/vla')
-# sys.path.append("SOLAMI/models/motiongpt")
+sys.path.append('/root/pengyang/codebase/SOLAMI/models/vla/anygpt')
+sys.path.append('/root/pengyang/codebase/SOLAMI/models/vla')
+# sys.path.append("/root/pengyang/codebase/SOLAMI/models/motiongpt")
 import torch
 import torch.nn as nn
 import numpy as np
@@ -82,11 +82,11 @@ class ECModel(nn.Module):
         self.soundstorm.to(device=self.device)
         
         print("loading motion")
-        body_config = open_yaml("SOLAMI/models/vla/motion/body.yaml")
-        hand_config = open_yaml("SOLAMI/models/vla/motion/hand.yaml")
+        body_config = open_yaml("/root/pengyang/codebase/SOLAMI/models/vla/motion/body.yaml")
+        hand_config = open_yaml("/root/pengyang/codebase/SOLAMI/models/vla/motion/hand.yaml")
         self.vae_body = VQVae(**body_config)
         self.vae_hand = VQVae(**hand_config)
-        trans_config = open_yaml("SOLAMI/models/vla/motion/trans.yaml")
+        trans_config = open_yaml("/root/pengyang/codebase/SOLAMI/models/vla/motion/trans.yaml")
         self.vae_transform = VQVAE_Trans(**trans_config)
 
         for key in ['vae_body', 'vae_hand', 'vae_transform']:
@@ -194,7 +194,7 @@ class ECModel(nn.Module):
         # codes.shape：(1, 1, n)
         semantic_codes = [[int(num) for num in re.findall(r'\d+', content)]]
         # wav: (b, 1, t)
-        config_dict = json.load(open('SOLAMI/models/vla/config/generate_config.json', 'r'))
+        config_dict = json.load(open('/root/pengyang/codebase/SOLAMI/models/vla/config/generate_config.json', 'r'))
         wav = semantic2acoustic(torch.Tensor(semantic_codes).int().to(self.device), prompt_tokens, 
                                 self.soundstorm, self.speech_tokenizer, steps=config_dict['vc_steps'])
         wav = wav.squeeze(0).detach().cpu()
@@ -360,11 +360,11 @@ class ECModel(nn.Module):
         input_ids,
         task,
     ):
-        config_path='SOLAMI/models/vla/config/text_generate_config.json'
+        config_path='/root/pengyang/codebase/SOLAMI/models/vla/config/text_generate_config.json'
         if task in ['t2m', 'm2m']:
-            config_path='SOLAMI/models/vla/config/motion_generate_config.json'
+            config_path='/root/pengyang/codebase/SOLAMI/models/vla/config/motion_generate_config.json'
         elif task in ['t2s', 's2s']:
-            config_path='SOLAMI/models/vla/config/speech_generate_config.json'
+            config_path='/root/pengyang/codebase/SOLAMI/models/vla/config/speech_generate_config.json'
         config_dict = json.load(open(config_path, 'r'))
         generation_config = GenerationConfig(    
             **config_dict
@@ -436,7 +436,7 @@ class ECModel(nn.Module):
         elif task in ['t2s', 's2s']:
             speech_content = content[0]
             generated_wav = self.decode_speech(speech_content, prompt_path)
-            # torchaudio.save("SOLAMI/models/vla/infer_output/pretrain_checkpoint-4096/test.wav", generated_wav, self.speech_tokenizer.sample_rate)
+            # torchaudio.save("/root/pengyang/codebase/SOLAMI/models/vla/infer_output/pretrain_checkpoint-4096/test.wav", generated_wav, self.speech_tokenizer.sample_rate)
             return generated_wav
         else:
             text_content = content[0]
@@ -611,12 +611,12 @@ if __name__ == "__main__":
     parser.add_argument("--period", type=int, default=4)
     args = parser.parse_args()
     
-    model_name_or_path = "SOLAMI/models/vla/output_models/pretrain_audio_motion/checkpoint-4096"
-    output_dir = "SOLAMI/models/vla/infer_output/pretrain_checkpoint-4096-final"
-    speech_tokenizer_path = "SOLAMI/extra/AnyGPT-speech-modules/speechtokenizer/ckpt.dev"
-    speech_tokenizer_config = "SOLAMI/extra/AnyGPT-speech-modules/speechtokenizer/config.json"
-    soundstorm_path = "SOLAMI/extra/AnyGPT-speech-modules/soundstorm/speechtokenizer_soundstorm_mls.pt"
-    motion_tokenizer_dir = "SOLAMI/extra/motion_tokenizer"
+    model_name_or_path = "/root/pengyang/codebase/SOLAMI/models/vla/output_models/pretrain_audio_motion/checkpoint-4096"
+    output_dir = "/root/pengyang/codebase/SOLAMI/models/vla/infer_output/pretrain_checkpoint-4096-final"
+    speech_tokenizer_path = "/root/pengyang/codebase/SOLAMI/extra/AnyGPT-speech-modules/speechtokenizer/ckpt.dev"
+    speech_tokenizer_config = "/root/pengyang/codebase/SOLAMI/extra/AnyGPT-speech-modules/speechtokenizer/config.json"
+    soundstorm_path = "/root/pengyang/codebase/SOLAMI/extra/AnyGPT-speech-modules/soundstorm/speechtokenizer_soundstorm_mls.pt"
+    motion_tokenizer_dir = "/root/pengyang/codebase/SOLAMI/extra/motion_tokenizer"
     
     prompter = Prompter()
     
@@ -691,7 +691,7 @@ if __name__ == "__main__":
             # smplx_joints = pretrained_model.smplx_infer(smplx_params)
             # ### save smplx_joints
             # smplx_joints = smplx_joints.squeeze(0).detach().cpu()
-            # np.save(os.path.join('SOLAMI/models/vla/infer_output/test_vqvae_2999', chat_data['id'] + '_motion.npy'), smplx_joints)
+            # np.save(os.path.join('/root/pengyang/codebase/SOLAMI/models/vla/infer_output/test_vqvae_2999', chat_data['id'] + '_motion.npy'), smplx_joints)
             # print(chat_data['id'])
             # print(text)
             # pass

@@ -1,15 +1,15 @@
 #!/bin/bash
 
 DATA_DIR=(
-    "SOLAMI/models/vla/infer_output/llama2-dlp-motiongpt-retrieval-final-0"
-    "SOLAMI/models/vla/infer_output/llama2-dlp-motiongpt-retrieval-final-1"
-    "SOLAMI/models/vla/infer_output/llama2-dlp-motiongpt-retrieval-final-2"
+    "/root/pengyang/codebase/SOLAMI/models/vla/infer_output/llama2-dlp-motiongpt-retrieval-final-0"
+    "/root/pengyang/codebase/SOLAMI/models/vla/infer_output/llama2-dlp-motiongpt-retrieval-final-1"
+    "/root/pengyang/codebase/SOLAMI/models/vla/infer_output/llama2-dlp-motiongpt-retrieval-final-2"
 )
 
 DATA_DIR2=(
-    "SOLAMI/models/vla/infer_output/llama2-dlp-motiongpt-retrieval-final-3"
-    "SOLAMI/models/vla/infer_output/llama2-dlp-motiongpt-retrieval-final-4"
-    "SOLAMI/models/vla/infer_output/llama2-dlp-motiongpt-retrieval-final-0"
+    "/root/pengyang/codebase/SOLAMI/models/vla/infer_output/llama2-dlp-motiongpt-retrieval-final-3"
+    "/root/pengyang/codebase/SOLAMI/models/vla/infer_output/llama2-dlp-motiongpt-retrieval-final-4"
+    "/root/pengyang/codebase/SOLAMI/models/vla/infer_output/llama2-dlp-motiongpt-retrieval-final-0"
 )
 
 for i in "${!DATA_DIR[@]}"; do

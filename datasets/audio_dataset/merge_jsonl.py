@@ -1,8 +1,8 @@
 import json
 import sys
 import os
-sys.path.append("SOLAMI/models/vla/")
-sys.path.append("SOLAMI/models/vla/anygpt/src")
+sys.path.append("/root/pengyang/codebase/SOLAMI/models/vla/")
+sys.path.append("/root/pengyang/codebase/SOLAMI/models/vla/anygpt")
 from tqdm import tqdm
 
 

@@ -4,12 +4,12 @@
 
 # METAROOT="Path-to-pretrained-model" 
 # https://huggingface.co/fnlp/AnyGPT-base
-METAROOT="SOLAMI/extra/AnyGPT-base" 
-# METAROOT="SOLAMI/models/vla/output_models/pretrain/checkpoint-10"
+METAROOT="/root/pengyang/codebase/SOLAMI/extra/AnyGPT-base" 
+# METAROOT="/root/pengyang/codebase/SOLAMI/models/vla/output_models/pretrain/checkpoint-10"
 DATAROOT="SOLAMI_data"
 
-OUTROOT="SOLAMI/models/vla/output_models/pretrain_audio_motion_final"
-CACHEROOT="SOLAMI/models/vla/data/pretrain/cache"
+OUTROOT="/root/pengyang/codebase/SOLAMI/models/vla/output_models/pretrain_audio_motion_final"
+CACHEROOT="/root/pengyang/codebase/SOLAMI/models/vla/data/pretrain/cache"
 
 
 speech_datasets="${DATAROOT}/audio/commonvoice_processed/commonvoice_merged.jsonl ${DATAROOT}/audio/anyinstruct/anyinstruct_merged.jsonl"
@@ -18,9 +18,9 @@ it_datasets="${DATAROOT}/Conversation/train_it_items.jsonl"
 
 
 
-python -m torch.distributed.run  --nproc-per-node 8 \
-  --deepspeed "SOLAMI/models/vla/scripts/stage1_deepspeed.json" \
- SOLAMI/models/vla/anygpt/src/train/audio_motion_pretrain.py \
+# python -m torch.distributed.run  --nproc-per-node 8 \
+python  /root/pengyang/codebase/SOLAMI/models/vla/anygpt/train/audio_motion_pretrain.py \
+    --deepspeed "/root/pengyang/codebase/SOLAMI/models/vla/scripts/stage1_deepspeed.json" \
     --run_name "audio_motion_pretrain_final" \
     --model_name_or_path ${METAROOT} \
     --speech_data_path "${speech_datasets}" \

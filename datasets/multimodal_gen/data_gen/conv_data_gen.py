@@ -1,6 +1,6 @@
 import os
 import sys
-sys.path.append('SOLAMI/datasets/multimodal_gen/data_gen')
+sys.path.append('/root/pengyang/codebase/SOLAMI/datasets/multimodal_gen/data_gen')
 import numpy as np
 from tqdm import tqdm
 import pandas as pd
@@ -124,8 +124,8 @@ def save_res(generate_res, output_path, logger=None):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--profile_data_path", type=str, default='SOLAMI/datasets/multimodal_gen/data/topics/merged_topics_new.csv')
-    parser.add_argument("--config_path", type=str, default='SOLAMI/datasets/multimodal_gen/data_gen/configs/default.yaml')
+    parser.add_argument("--profile_data_path", type=str, default='/root/pengyang/codebase/SOLAMI/datasets/multimodal_gen/data/topics/merged_topics_new.csv')
+    parser.add_argument("--config_path", type=str, default='/root/pengyang/codebase/SOLAMI/datasets/multimodal_gen/data_gen/configs/default.yaml')
     parser.add_argument("--exper", type=str, default='sim_all')
     parser.add_argument("--period", type=int, default=8)
     parser.add_argument("--part", type=int, default=0)
@@ -140,7 +140,7 @@ if __name__ == "__main__":
         shift = 0
     
     params =  OmegaConf.load(args.config_path)
-    api_info = OmegaConf.load("SOLAMI/datasets/multimodal_gen/data_gen/configs/api.yaml")
+    api_info = OmegaConf.load("/root/pengyang/codebase/SOLAMI/datasets/multimodal_gen/data_gen/configs/api.yaml")
 
     if params.llm_settings.api_type in api_info.API_info.keys():
         params.llm_settings.update(api_info.API_info[params.llm_settings.api_type])

@@ -52,9 +52,9 @@ class Text2MotionDatasetCB(data.Dataset):
         if task_path:
             instructions = task_path
         elif stage == 'lm_pretrain':
-            instructions = pjoin('SOLAMI/models/motiongpt/prepare/instructions', 'template_pretrain_new_simple.json')
+            instructions = pjoin('/root/pengyang/codebase/SOLAMI/models/motiongpt/prepare/instructions', 'template_pretrain_new_simple.json')
         elif stage in ['lm_instruct', "lm_rl"]:
-            instructions = pjoin('SOLAMI/models/motiongpt/prepare/instructions', 'template_instructions.json')
+            instructions = pjoin('/root/pengyang/codebase/SOLAMI/models/motiongpt/prepare/instructions', 'template_instructions.json')
         else:
             raise NotImplementedError(f"stage {stage} not implemented")
 

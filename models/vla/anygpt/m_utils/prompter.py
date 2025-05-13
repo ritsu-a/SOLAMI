@@ -1,6 +1,6 @@
 from typing import Union
 import sys
-sys.path.append("./anygpt/src")
+sys.path.append("./anygpt")
 from m_utils.instructions import other2text_instructions, text2other_instructions, other2other_instructions
 import random
 

@@ -1,9 +1,9 @@
 #!/bin/bash
 
 declare -a paths=( \
-            "SOLAMI/datasets/multimodal_gen/data_gen/output/sim1/sim1__1200_0_c_sc.json" \
-            "SOLAMI/datasets/multimodal_gen/data_gen/output/sim1/sim1__1440_0_c_sc.json" \
-            "SOLAMI/datasets/multimodal_gen/data_gen/output/sim1/sim1__1520_0_c_sc.json" \
+            "/root/pengyang/codebase/SOLAMI/datasets/multimodal_gen/data_gen/output/sim1/sim1__1200_0_c_sc.json" \
+            "/root/pengyang/codebase/SOLAMI/datasets/multimodal_gen/data_gen/output/sim1/sim1__1440_0_c_sc.json" \
+            "/root/pengyang/codebase/SOLAMI/datasets/multimodal_gen/data_gen/output/sim1/sim1__1520_0_c_sc.json" \
             )
 
 

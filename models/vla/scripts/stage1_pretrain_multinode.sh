@@ -4,12 +4,12 @@
 
 # METAROOT="Path-to-pretrained-model" 
 # https://huggingface.co/fnlp/AnyGPT-base
-METAROOT="SOLAMI/extra/AnyGPT-base" 
-# METAROOT="SOLAMI/models/vla/output_models/pretrain/checkpoint-10"
+METAROOT="/root/pengyang/codebase/SOLAMI/extra/AnyGPT-base" 
+# METAROOT="/root/pengyang/codebase/SOLAMI/models/vla/output_models/pretrain/checkpoint-10"
 DATAROOT="SOLAMI_data"
 
-OUTROOT="SOLAMI/models/vla/output_models/pretrain_audio_motion_final"
-CACHEROOT="SOLAMI/models/vla/data/pretrain/cache"
+OUTROOT="/root/pengyang/codebase/SOLAMI/models/vla/output_models/pretrain_audio_motion_final"
+CACHEROOT="/root/pengyang/codebase/SOLAMI/models/vla/data/pretrain/cache"
 
 
 speech_datasets="${DATAROOT}/audio/commonvoice_processed/commonvoice_merged.jsonl ${DATAROOT}/audio/anyinstruct/anyinstruct_merged.jsonl"
@@ -52,13 +52,13 @@ fi
 NUM_GPU=$((${GPU_PER_NODES}*${NNODES}))
 # HOME_DIR=${0%/*}
 echo "HOME_DIR: ${HOME_DIR}"
-HOME_DIR="SOLAMI/models/vla"
+HOME_DIR="/root/pengyang/codebase/SOLAMI/models/vla"
 cd ${HOME_DIR}
 HOME_DIR=$(pwd)
 echo "HOME_DIR: ${HOME_DIR}"
 
-CMD=" SOLAMI/models/vla/anygpt/src/train/audio_motion_pretrain.py \
-    --deepspeed "SOLAMI/models/vla/scripts/stage1_deepspeed_zero3.json" \
+CMD=" /root/pengyang/codebase/SOLAMI/models/vla/anygpt/train/audio_motion_pretrain.py \
+    --deepspeed "/root/pengyang/codebase/SOLAMI/models/vla/scripts/stage1_deepspeed_zero3.json" \
     --run_name "audio_motion_pretrain_final" \
     --model_name_or_path '${METAROOT}' \
     --speech_data_path '${speech_datasets}' \

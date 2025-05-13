@@ -1,8 +1,8 @@
 import os
 import sys
 os.environ["TRANSFORMERS_CACHE"] = "~/.cache/huggingface/hub"
-sys.path.append('SOLAMI/models/vla/anygpt/src')
-sys.path.append('SOLAMI/models/vla')
+sys.path.append('/root/pengyang/codebase/SOLAMI/models/vla/anygpt')
+sys.path.append('/root/pengyang/codebase/SOLAMI/models/vla')
 import torch
 import numpy as np
 from torchmetrics import Metric

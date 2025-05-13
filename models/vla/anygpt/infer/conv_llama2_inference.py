@@ -1,9 +1,9 @@
 import os
 import sys
-sys.path.append('SOLAMI/models/vla/anygpt/src')
-sys.path.append('SOLAMI/models/vla')
+sys.path.append('/root/pengyang/codebase/SOLAMI/models/vla/anygpt')
+sys.path.append('/root/pengyang/codebase/SOLAMI/models/vla')
 sys.path.append('SOLAMI')
-sys.path.append("SOLAMI/models/motiongpt")
+sys.path.append("/root/pengyang/codebase/SOLAMI/models/motiongpt")
 import torch
 import torch.nn as nn
 import numpy as np
@@ -155,14 +155,14 @@ class DLP(nn.Module):
         
         if self.method in ['dlp+motiongpt', 'dlp+motiongpt+retrieval']:
             # TODO check your model here!
-            cfg = OmegaConf.load("SOLAMI/models/motiongpt/experiments/mgpt/Pretrain_HumanML3D_GPT2_Local_Body_Hand_Sep_NoInterleave/config_2024-09-24-20-26-38_train.yaml")
-            cfg.TEST.CHECKPOINTS = "SOLAMI/models/motiongpt/experiments/mgpt/Pretrain_HumanML3D_GPT2_Local_Body_Hand_Sep_NoInterleave/checkpoints/last.ckpt"
+            cfg = OmegaConf.load("/root/pengyang/codebase/SOLAMI/models/motiongpt/experiments/mgpt/Pretrain_HumanML3D_GPT2_Local_Body_Hand_Sep_NoInterleave/config_2024-09-24-20-26-38_train.yaml")
+            cfg.TEST.CHECKPOINTS = "/root/pengyang/codebase/SOLAMI/models/motiongpt/experiments/mgpt/Pretrain_HumanML3D_GPT2_Local_Body_Hand_Sep_NoInterleave/checkpoints/last.ckpt"
             cfg.TEST.BATCH_SIZE = 1
             cfg.EXPER.transform = False
             cfg.DEBUG = True
-            cfg.METRIC.TM2T.t2m_path = "SOLAMI/models/motiongpt/deps/t2m"
+            cfg.METRIC.TM2T.t2m_path = "/root/pengyang/codebase/SOLAMI/models/motiongpt/deps/t2m"
             cfg.METRIC.TYPE = []
-            cfg.lm.gpt2_medium.params.model_path = "SOLAMI/models/motiongpt/deps/gpt2"
+            cfg.lm.gpt2_medium.params.model_path = "/root/pengyang/codebase/SOLAMI/models/motiongpt/deps/gpt2"
             datasets_motiongpt = build_data(cfg, phase='token')
             model_config = OmegaConf.to_container(cfg.model, resolve=True)
             model_config['params']['cfg'] = cfg
@@ -589,9 +589,9 @@ if __name__ == "__main__":
     parser.add_argument("--period", type=int, default=1)
     parser.add_argument("--method", type=str, default='llm+speech')
     parser.add_argument("--model_path", type=str, 
-                        default="SOLAMI/extra/meta-llama/Llama-2-7b-chat-hf")
+                        default="/root/pengyang/codebase/SOLAMI/extra/meta-llama/Llama-2-7b-chat-hf")
     parser.add_argument("--output_dir", type=str,
-                        default="SOLAMI/models/vla/infer_output/llama2_dlp_retrieval_inference-test")
+                        default="/root/pengyang/codebase/SOLAMI/models/vla/infer_output/llama2_dlp_retrieval_inference-test")
     args = parser.parse_args()
 
 

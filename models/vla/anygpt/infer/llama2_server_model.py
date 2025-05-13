@@ -1,9 +1,9 @@
 import os
 import sys
-sys.path.append('SOLAMI/models/vla/anygpt/src')
-sys.path.append('SOLAMI/models/vla')
+sys.path.append('/root/pengyang/codebase/SOLAMI/models/vla/anygpt')
+sys.path.append('/root/pengyang/codebase/SOLAMI/models/vla')
 sys.path.append('SOLAMI')
-sys.path.append("SOLAMI/models/motiongpt")
+sys.path.append("/root/pengyang/codebase/SOLAMI/models/motiongpt")
 import torch
 import torch.nn as nn
 import numpy as np
@@ -107,7 +107,7 @@ class ITDataset(DatasetTorch):
 class DLP(nn.Module):
     def __init__(
         self, 
-        model_path="SOLAMI/extra/meta-llama/Llama-2-7b-chat-hf",
+        model_path="/root/pengyang/codebase/SOLAMI/extra/meta-llama/Llama-2-7b-chat-hf",
         REPEAT_TIMES=4, ):
         super().__init__()
         self.device = torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu')
@@ -140,14 +140,14 @@ class DLP(nn.Module):
         
         # loading motiongpt
         # if self.method in ['dlp+motiongpt', 'dlp+motiongpt+retrieval']:
-        cfg = OmegaConf.load("SOLAMI/models/motiongpt/experiments/mgpt/Pretrain_HumanML3D_GPT2_Local_Body_Hand_Sep_NoInterleave/config_2024-09-24-20-26-38_train.yaml")
-        cfg.TEST.CHECKPOINTS = "SOLAMI/models/motiongpt/experiments/mgpt/Pretrain_HumanML3D_GPT2_Local_Body_Hand_Sep_NoInterleave/checkpoints/last.ckpt"
+        cfg = OmegaConf.load("/root/pengyang/codebase/SOLAMI/models/motiongpt/experiments/mgpt/Pretrain_HumanML3D_GPT2_Local_Body_Hand_Sep_NoInterleave/config_2024-09-24-20-26-38_train.yaml")
+        cfg.TEST.CHECKPOINTS = "/root/pengyang/codebase/SOLAMI/models/motiongpt/experiments/mgpt/Pretrain_HumanML3D_GPT2_Local_Body_Hand_Sep_NoInterleave/checkpoints/last.ckpt"
         cfg.TEST.BATCH_SIZE = 1
         cfg.EXPER.transform = False
         cfg.DEBUG = True
-        cfg.METRIC.TM2T.t2m_path = "SOLAMI/models/motiongpt/deps/t2m"
+        cfg.METRIC.TM2T.t2m_path = "/root/pengyang/codebase/SOLAMI/models/motiongpt/deps/t2m"
         cfg.METRIC.TYPE = []
-        cfg.lm.gpt2_medium.params.model_path = "SOLAMI/models/motiongpt/deps/gpt2"
+        cfg.lm.gpt2_medium.params.model_path = "/root/pengyang/codebase/SOLAMI/models/motiongpt/deps/gpt2"
         datasets_motiongpt = build_data(cfg, phase='token')
         model_config = OmegaConf.to_container(cfg.model, resolve=True)
         model_config['params']['cfg'] = cfg
@@ -445,11 +445,11 @@ class DLP(nn.Module):
         return ['llm+speech', 'dlp+motiongpt', 'dlp+motiongpt+retrieval']
     
     def inference_first_round(self,):
-        input_motion_path = "SOLAMI/models/vla/data/test_server/motion_user.npz"
+        input_motion_path = "/root/pengyang/codebase/SOLAMI/models/vla/data/test_server/motion_user.npz"
         input_audio_path = "SOLAMI_data/audio/voice_prompt/voices/trump_0.mp3"
         
-        output_motion_path = "SOLAMI/models/vla/data/test_server/output_character1_1.npz"
-        output_audio_path = "SOLAMI/models/vla/data/test_server/output_character1_1.mp3"
+        output_motion_path = "/root/pengyang/codebase/SOLAMI/models/vla/data/test_server/output_character1_1.npz"
+        output_audio_path = "/root/pengyang/codebase/SOLAMI/models/vla/data/test_server/output_character1_1.mp3"
         session_id = self.create_session('Trump', 'Trump_0', 'dlp+motiongpt+retrieval')
         res = self.conv_inference_server_local(input_motion_path, input_audio_path, 
                                          output_motion_path=output_motion_path, 
@@ -967,9 +967,9 @@ if __name__ == "__main__":
     parser.add_argument("--period", type=int, default=1)
     parser.add_argument("--method", type=str, default='llm+speech')
     parser.add_argument("--model_path", type=str, 
-                        default="SOLAMI/extra/meta-llama/Llama-2-7b-chat-hf")
+                        default="/root/pengyang/codebase/SOLAMI/extra/meta-llama/Llama-2-7b-chat-hf")
     parser.add_argument("--output_dir", type=str,
-                        default="SOLAMI/models/vla/infer_output/llama2_dlp_retrieval_inference-test")
+                        default="/root/pengyang/codebase/SOLAMI/models/vla/infer_output/llama2_dlp_retrieval_inference-test")
     args = parser.parse_args()
 
 
@@ -993,11 +993,11 @@ if __name__ == "__main__":
                              method=args.method)
 
 
-    input_motion_path = "SOLAMI/models/vla/data/test_server/motion_user.npz"
+    input_motion_path = "/root/pengyang/codebase/SOLAMI/models/vla/data/test_server/motion_user.npz"
     input_audio_path = "SOLAMI_data/audio/voice_prompt/voices/trump_0.mp3"
     
-    output_motion_path = "SOLAMI/models/vla/data/test_server/output_character1_0.npz"
-    output_audio_path = "SOLAMI/models/vla/data/test_server/output_character1_0.mp3"
+    output_motion_path = "/root/pengyang/codebase/SOLAMI/models/vla/data/test_server/output_character1_0.npz"
+    output_audio_path = "/root/pengyang/codebase/SOLAMI/models/vla/data/test_server/output_character1_0.mp3"
 
     for i in range(3):
         session_id = conv_model.create_session('Trump', 'Trump_0', 'llm+speech')

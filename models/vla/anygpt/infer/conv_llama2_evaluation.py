@@ -1,7 +1,7 @@
 import os
 import sys
-sys.path.append('SOLAMI/models/vla/anygpt/src')
-sys.path.append('SOLAMI/models/vla')
+sys.path.append('/root/pengyang/codebase/SOLAMI/models/vla/anygpt')
+sys.path.append('/root/pengyang/codebase/SOLAMI/models/vla')
 os.environ["TRANSFORMERS_CACHE"] = "~/.cache/huggingface/hub"
 import numpy as np
 import torch
@@ -76,7 +76,7 @@ def get_motion_utils():
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--data_dir", type=str, default="SOLAMI/models/vla/infer_output/it_full_checkpoint-128")
+    parser.add_argument("--data_dir", type=str, default="/root/pengyang/codebase/SOLAMI/models/vla/infer_output/it_full_checkpoint-128")
     parser.add_argument("--save_gt", type=bool, default=False)
     parser.add_argument("--save_pred", type=bool, default=False)
     args = parser.parse_args()

@@ -1,7 +1,7 @@
 import os
 import sys
-sys.path.append('SOLAMI/models/vla/anygpt/src')
-sys.path.append('SOLAMI/models/vla')
+sys.path.append('/root/pengyang/codebase/SOLAMI/models/vla/anygpt')
+sys.path.append('/root/pengyang/codebase/SOLAMI/models/vla')
 os.environ["TRANSFORMERS_CACHE"] = "~/.cache/huggingface/hub"
 import numpy as np
 import json
@@ -132,7 +132,7 @@ def calculate_api_cost(tokens_blog={}):
 #### load data files
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--data_dir", type=str, default="SOLAMI/models/vla/infer_output/it_full_checkpoint-768-final-0_evaluation")
+    parser.add_argument("--data_dir", type=str, default="/root/pengyang/codebase/SOLAMI/models/vla/infer_output/it_full_checkpoint-768-final-0_evaluation")
     args = parser.parse_args()
     
     data_dir = args.data_dir

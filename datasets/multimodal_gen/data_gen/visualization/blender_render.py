@@ -166,7 +166,7 @@ def setup_parser():
     parser.add_argument(
         '--json_path',
         type=str,
-        default='SOLAMI/datasets/multimodal_gen/data_gen/output/sim1/sim1__1200_0_if_sc.json')
+        default='/root/pengyang/codebase/SOLAMI/datasets/multimodal_gen/data_gen/output/sim1/sim1__1200_0_if_sc.json')
     parser.add_argument(
         '--engine_type',
         type=str,
@@ -223,8 +223,8 @@ if __name__ == '__main__':
         'humanml3d': 'SOLAMI_data/HumanML3D',
         'interx': 'SOLAMI_data/Inter-X',
     }
-    align_dir = "SOLAMI/datasets/multimodal_gen/data_gen/output/sim1_align"
-    audio_dir = "SOLAMI/datasets/multimodal_gen/data_gen/output/sim1_audio"
+    align_dir = "/root/pengyang/codebase/SOLAMI/datasets/multimodal_gen/data_gen/output/sim1_align"
+    audio_dir = "/root/pengyang/codebase/SOLAMI/datasets/multimodal_gen/data_gen/output/sim1_audio"
     # align_path = os.path.join(align_dir, os.path.basename(json_path))
     # with open(align_path, 'r') as f:
     #     aligns = json.load(f)
@@ -339,7 +339,7 @@ if __name__ == '__main__':
     bpy.data.scenes["Scene"].view_settings.view_transform = 'Standard'
     # bpy.data.worlds["World"].color = (1, 1, 1)
 
-    video_dir = "SOLAMI/datasets/multimodal_gen/data_gen/output/sim1_rendered"
+    video_dir = "/root/pengyang/codebase/SOLAMI/datasets/multimodal_gen/data_gen/output/sim1_rendered"
     os.makedirs(video_dir, exist_ok=True)
     video_path_tmp = os.path.join(align_dir, os.path.basename(json_path).split('.')[0] + '_rendered.mp4')
     video_path_final = os.path.join(video_dir, os.path.basename(json_path).split('.')[0] + '.mp4')

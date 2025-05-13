@@ -1,7 +1,7 @@
 import os
 import sys
-sys.path.append('SOLAMI/models/vla/anygpt/src')
-sys.path.append('SOLAMI/models/vla')
+sys.path.append('/root/pengyang/codebase/SOLAMI/models/vla/anygpt')
+sys.path.append('/root/pengyang/codebase/SOLAMI/models/vla')
 os.environ["WANDB_DISABLED"] = "true"
 import torch
 import torch.nn as nn
@@ -149,11 +149,11 @@ class SOLAMI(nn.Module):
         self.soundstorm.to(device=self.speech_device)
         
         print("loading motion")
-        body_config = open_yaml("SOLAMI/models/vla/motion/body.yaml")
-        hand_config = open_yaml("SOLAMI/models/vla/motion/hand.yaml")
+        body_config = open_yaml("/root/pengyang/codebase/SOLAMI/models/vla/motion/body.yaml")
+        hand_config = open_yaml("/root/pengyang/codebase/SOLAMI/models/vla/motion/hand.yaml")
         self.vae_body = VQVae(**body_config)
         self.vae_hand = VQVae(**hand_config)
-        trans_config = open_yaml("SOLAMI/models/vla/motion/trans.yaml")
+        trans_config = open_yaml("/root/pengyang/codebase/SOLAMI/models/vla/motion/trans.yaml")
         self.vae_transform = VQVAE_Trans(**trans_config)
 
         for key in ['vae_body', 'vae_hand', 'vae_transform']:
@@ -313,7 +313,7 @@ class SOLAMI(nn.Module):
         # codes.shape：(1, 1, n)
         # semantic_codes = [[int(num) for num in re.findall(r'\d+', content)]]
         # wav: (b, 1, t)
-        config_dict = json.load(open('SOLAMI/models/vla/config/generate_config.json', 'r'))
+        config_dict = json.load(open('/root/pengyang/codebase/SOLAMI/models/vla/config/generate_config.json', 'r'))
         if type(semantic_codes) is list:
             semantic_codes = torch.tensor(semantic_codes).int().to(self.speech_device)
         wav = semantic2acoustic(semantic_codes, prompt_tokens, 
@@ -387,7 +387,7 @@ class SOLAMI(nn.Module):
         self,
         input_ids,
     ):
-        config_path='SOLAMI/models/vla/config/generate_config.json'
+        config_path='/root/pengyang/codebase/SOLAMI/models/vla/config/generate_config.json'
         config_dict = json.load(open(config_path, 'r'))
         generation_config = GenerationConfig(    
             **config_dict
@@ -656,11 +656,11 @@ if __name__ == "__main__":
     parser.add_argument("--part", type=int, default=0)
     parser.add_argument("--period", type=int, default=4)
     parser.add_argument("--model_name_or_path", type=str, 
-                        default="SOLAMI/models/vla/output_models/pretrain_audio_motion_final/checkpoint-2560")
+                        default="/root/pengyang/codebase/SOLAMI/models/vla/output_models/pretrain_audio_motion_final/checkpoint-2560")
     parser.add_argument("--lora_model_name_or_path", type=str,
                         default=None)
     parser.add_argument("--output_dir", type=str,
-                        default="SOLAMI/models/vla/infer_output/conv_inference")
+                        default="/root/pengyang/codebase/SOLAMI/models/vla/infer_output/conv_inference")
     parser.add_argument('--use_vllm', type=bool, default=False)
     args = parser.parse_args()
 
@@ -672,23 +672,23 @@ if __name__ == "__main__":
         LORA = True
         model_name_or_path = args.model_name_or_path
         lora_model_name_or_path = args.lora_model_name_or_path
-        # model_name_or_path = "SOLAMI/models/vla/output_models/pretrain_audio_motion_final/checkpoint-2560"
-        # lora_model_name_or_path = "SOLAMI/models/vla/output_models/it_lora_deepspeed/checkpoint-640"
+        # model_name_or_path = "/root/pengyang/codebase/SOLAMI/models/vla/output_models/pretrain_audio_motion_final/checkpoint-2560"
+        # lora_model_name_or_path = "/root/pengyang/codebase/SOLAMI/models/vla/output_models/it_lora_deepspeed/checkpoint-640"
     else:
         LORA = False
         model_name_or_path = args.model_name_or_path
         lora_model_name_or_path = None
-        # model_name_or_path = "SOLAMI/models/vla/output_models/it_full_deepspeed_multinode/checkpoint-384"
+        # model_name_or_path = "/root/pengyang/codebase/SOLAMI/models/vla/output_models/it_full_deepspeed_multinode/checkpoint-384"
         # lora_model_name_or_path = None
     
     output_dir = args.output_dir
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
     
-    speech_tokenizer_path = "SOLAMI/extra/AnyGPT-speech-modules/speechtokenizer/ckpt.dev"
-    speech_tokenizer_config = "SOLAMI/extra/AnyGPT-speech-modules/speechtokenizer/config.json"
-    soundstorm_path = "SOLAMI/extra/AnyGPT-speech-modules/soundstorm/speechtokenizer_soundstorm_mls.pt"
-    motion_tokenizer_dir = "SOLAMI/extra/motion_tokenizer_final"
+    speech_tokenizer_path = "/root/pengyang/codebase/SOLAMI/extra/AnyGPT-speech-modules/speechtokenizer/ckpt.dev"
+    speech_tokenizer_config = "/root/pengyang/codebase/SOLAMI/extra/AnyGPT-speech-modules/speechtokenizer/config.json"
+    soundstorm_path = "/root/pengyang/codebase/SOLAMI/extra/AnyGPT-speech-modules/soundstorm/speechtokenizer_soundstorm_mls.pt"
+    motion_tokenizer_dir = "/root/pengyang/codebase/SOLAMI/extra/motion_tokenizer_final"
 
     conv_model = SOLAMI(model_name_or_path, lora_model_name_or_path, 
                         output_dir, speech_tokenizer_path, 

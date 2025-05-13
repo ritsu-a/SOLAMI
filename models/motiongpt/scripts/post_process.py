@@ -1,7 +1,7 @@
 import os
 print(os.getcwd())
 import sys
-sys.path.append("SOLAMI/models/motiongpt")
+sys.path.append("/root/pengyang/codebase/SOLAMI/models/motiongpt")
 import numpy as np
 import pytorch_lightning as pl
 from pathlib import Path

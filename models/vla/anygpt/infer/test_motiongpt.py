@@ -1,8 +1,8 @@
 import os
 import sys
-sys.path.append("SOLAMI/models/motiongpt")
-sys.path.append('SOLAMI/models/vla/anygpt/src')
-sys.path.append('SOLAMI/models/vla')
+sys.path.append("/root/pengyang/codebase/SOLAMI/models/motiongpt")
+sys.path.append('/root/pengyang/codebase/SOLAMI/models/vla/anygpt')
+sys.path.append('/root/pengyang/codebase/SOLAMI/models/vla')
 from omegaconf import OmegaConf
 
 from mGPT.config import parse_args, instantiate_from_config
@@ -24,15 +24,15 @@ def initialize_debugpy():
 
 
 def main():
-    cfg = OmegaConf.load("SOLAMI/models/motiongpt/experiments/mgpt/Pretrain_HumanML3D_GPT2_Local_Body_Hand_Sep_NoInterleave/config_2024-09-24-20-26-38_train.yaml")
-    cfg.TEST.CHECKPOINTS = "SOLAMI/models/motiongpt/experiments/mgpt/Pretrain_HumanML3D_GPT2_Local_Body_Hand_Sep_NoInterleave/checkpoints/last.ckpt"
+    cfg = OmegaConf.load("/root/pengyang/codebase/SOLAMI/models/motiongpt/experiments/mgpt/Pretrain_HumanML3D_GPT2_Local_Body_Hand_Sep_NoInterleave/config_2024-09-24-20-26-38_train.yaml")
+    cfg.TEST.CHECKPOINTS = "/root/pengyang/codebase/SOLAMI/models/motiongpt/experiments/mgpt/Pretrain_HumanML3D_GPT2_Local_Body_Hand_Sep_NoInterleave/checkpoints/last.ckpt"
     cfg.TEST.BATCH_SIZE = 1
     cfg.EXPER.transform = False
     cfg.DEBUG = True
     
-    cfg.METRIC.TM2T.t2m_path = "SOLAMI/models/motiongpt/deps/t2m"
+    cfg.METRIC.TM2T.t2m_path = "/root/pengyang/codebase/SOLAMI/models/motiongpt/deps/t2m"
     cfg.METRIC.TYPE = []
-    cfg.lm.gpt2_medium.params.model_path = "SOLAMI/models/motiongpt/deps/gpt2"
+    cfg.lm.gpt2_medium.params.model_path = "/root/pengyang/codebase/SOLAMI/models/motiongpt/deps/gpt2"
     datasets = build_data(cfg, phase='token')
     
     model_config = OmegaConf.to_container(cfg.model, resolve=True)

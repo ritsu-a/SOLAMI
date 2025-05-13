@@ -3,10 +3,10 @@
 # export NCCL_IB_GID_INDEX=3
 
 # path-to-pretrain-model
-METAROOT="SOLAMI/models/vla/output_models/pretrain_audio_motion_final/checkpoint-2560" 
+METAROOT="/root/pengyang/codebase/SOLAMI/models/vla/output_models/pretrain_audio_motion_final/checkpoint-2560" 
 
 DATAROOT="SOLAMI_data"
-OUTROOT="SOLAMI/models/vla/output_models/it_lora_deepspeed"
+OUTROOT="/root/pengyang/codebase/SOLAMI/models/vla/output_models/it_lora_deepspeed"
 CACHEROOT="${DATAROOT}/cache/it_debug"
 
 it_datasets="${DATAROOT}/Conversation/train_it_items.jsonl"
@@ -19,8 +19,8 @@ echo "stage2: instruction tuning"
 CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7
 torchrun \
     --nproc_per_node 8 \
-     SOLAMI/models/vla/anygpt/src/train/conv_instruction_tuning.py \
-     --deepspeed "SOLAMI/models/vla/scripts/stage2_deepspeed_offload.json" \
+     /root/pengyang/codebase/SOLAMI/models/vla/anygpt/train/conv_instruction_tuning.py \
+     --deepspeed "/root/pengyang/codebase/SOLAMI/models/vla/scripts/stage2_deepspeed_offload.json" \
     --model_name_or_path "${METAROOT}" \
     --run_name "mm_sft" \
     --it_data_path "${it_datasets}" \

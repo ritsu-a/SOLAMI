@@ -1,6 +1,6 @@
 import os
 import sys
-sys.path.append('SOLAMI/models/vla/anygpt/src')
+sys.path.append('/root/pengyang/codebase/SOLAMI/models/vla/anygpt')
 os.environ["WANDB_DISABLED"] = "true"
 import torch
 import numpy as np

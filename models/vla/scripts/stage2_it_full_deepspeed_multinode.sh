@@ -3,10 +3,10 @@
 # export NCCL_IB_GID_INDEX=3
 
 # path-to-pretrain-model
-METAROOT="SOLAMI/models/vla/output_models/pretrain_audio_motion_final/checkpoint-2560" 
+METAROOT="/root/pengyang/codebase/SOLAMI/models/vla/output_models/pretrain_audio_motion_final/checkpoint-2560" 
 
 DATAROOT="SOLAMI_data"
-OUTROOT="SOLAMI/models/vla/output_models/it_full_deepspeed_multinode"
+OUTROOT="/root/pengyang/codebase/SOLAMI/models/vla/output_models/it_full_deepspeed_multinode"
 CACHEROOT="${DATAROOT}/cache/it_debug"
 
 it_datasets="${DATAROOT}/Conversation/train_it_items.jsonl ${DATAROOT}/Conversation/test_it_items.jsonl"
@@ -47,13 +47,13 @@ fi
 NUM_GPU=$((${GPU_PER_NODES}*${NNODES}))
 # HOME_DIR=${0%/*}
 echo "HOME_DIR: ${HOME_DIR}"
-HOME_DIR="SOLAMI/models/vla"
+HOME_DIR="/root/pengyang/codebase/SOLAMI/models/vla"
 cd ${HOME_DIR}
 HOME_DIR=$(pwd)
 echo "HOME_DIR: ${HOME_DIR}"
 
-CMD=" SOLAMI/models/vla/anygpt/src/train/conv_instruction_tuning.py \
-    --deepspeed "SOLAMI/models/vla/scripts/stage2_deepspeed_zero3.json" \
+CMD=" /root/pengyang/codebase/SOLAMI/models/vla/anygpt/train/conv_instruction_tuning.py \
+    --deepspeed "/root/pengyang/codebase/SOLAMI/models/vla/scripts/stage2_deepspeed_zero3.json" \
     --run_name "it_full_deepspeed" \
     --model_name_or_path '${METAROOT}' \
     --it_data_path '${it_datasets}' \
