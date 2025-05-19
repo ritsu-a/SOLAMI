@@ -3,6 +3,7 @@ import numpy as np
 import sys
 sys.path.append('SOLAMI_data/HumanTOMATO/src/tomato_represenation')
 sys.path.append('tools/smplx')
+sys.path.append('/root/pengyang/codebase/SOLAMI/models/motiongpt/mGPT/data/humanml')
 import smplx
 import roma
 import argparse
@@ -11,7 +12,7 @@ from os.path import join as pjoin
 
 from common.skeleton import Skeleton
 from common.quaternion import *
-from paramUtil import *
+from utils.paramUtil import *
 import torch
 import torch.nn.functional as F
 

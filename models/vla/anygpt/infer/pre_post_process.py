@@ -2,7 +2,7 @@ import torch
 import json
 import sys
 
-from anygpt.src.m_utils.prompter import Prompter
+from m_utils.prompter import Prompter
 from tqdm import tqdm
 from m_utils.conversation import get_conv_template
 

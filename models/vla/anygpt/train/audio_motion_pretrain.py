@@ -15,7 +15,8 @@ from transformers import Trainer
 from datasets import load_dataset, interleave_datasets, concatenate_datasets
 # from datasets import Dataset, DatasetDict
 from torch.utils.data import Dataset as DatasetTorch
-from transformers import LlamaForCausalLM, LlamaTokenizer, HfArgumentParser, TrainingArguments, DataCollatorForSeq2Seq
+from transformers import AutoTokenizer, AutoModelForCausalLM, AutoModelForImageTextToText, BitsAndBytesConfig
+from transformers import AutoModelForImageTextToText, TorchAoConfig, Gemma3ForConditionalGeneration, AutoProcessor, AutoTokenizer, HfArgumentParser, TrainingArguments, DataCollatorForSeq2Seq
 from transformers.trainer_utils import get_last_checkpoint
 
 from m_utils.loggings import get_logger
@@ -35,7 +36,7 @@ def initialize_debugpy():
         print("Debugpy is listening on port 15696")
         debugpy.listen(("0.0.0.0", 15696))
         debugpy.wait_for_client()
-        
+
 def initialize_distributed():
     if not dist.is_initialized():
         dist.init_process_group(backend='nccl')
@@ -72,11 +73,11 @@ class ModelArguments:
 @dataclass
 class DataArguments:
     speech_data_path: str = field(
-        default=None, 
+        default=None,
         metadata={"help": "Path to the training speech data."}
     )
     motion_data_path: str = field(
-        default=None, 
+        default=None,
         metadata={"help": "Path to the training motion data."}
     )
     it_data_path: str = field(
@@ -105,7 +106,7 @@ class DataArguments:
         },
     )
     concatenating: bool = field(
-        default=True, 
+        default=True,
         metadata={"help": "Enable concatenating mode"}
     )
     preprocessing_num_workers: int = field(
@@ -183,7 +184,7 @@ class TrainingArguments(transformers.TrainingArguments):
 
 
 class SpeechDataset(DatasetTorch):
-    def __init__(self, 
+    def __init__(self,
                  data_path: str,
                 tokenizer: transformers.PreTrainedTokenizer,
                 data_args: DataArguments,
@@ -213,11 +214,11 @@ class SpeechDataset(DatasetTorch):
     def train_test_split(dataset, test_size=100, shuffle=True, random_state=None):
         if random_state is not None:
             random.seed(random_state)
-        
+
         indices = list(range(len(dataset)))
         if shuffle:
             random.shuffle(indices)
-        
+
         if test_size < 1:
             test_size = int(test_size * len(dataset))
         elif test_size >= len(dataset)-32:
@@ -225,15 +226,15 @@ class SpeechDataset(DatasetTorch):
         split = len(dataset) - test_size
         train_indices = indices[:split]
         test_indices = indices[split:]
-        
+
         raw_dataset_train = dataset.raw_dataset.select(train_indices)
         raw_dataset_test = dataset.raw_dataset.select(test_indices)
         train_data = SpeechDataset('', raw_dataset=raw_dataset_train, tokenizer=dataset.tokenizer, data_args=dataset.data_args, logger=dataset.logger, prompter=dataset.prompter)
         test_data = SpeechDataset('', raw_dataset=raw_dataset_test, tokenizer=dataset.tokenizer, data_args=dataset.data_args, logger=dataset.logger, prompter=dataset.prompter)
-        
+
         return {'train': train_data, 'test': test_data}
 
-    def tokenize_func(self, sentence, add_eos_token=True):  
+    def tokenize_func(self, sentence, add_eos_token=True):
         result = self.tokenizer(
             sentence,
             truncation=True,
@@ -260,7 +261,7 @@ class SpeechDataset(DatasetTorch):
             tasks = ['t2s', 's2t']
         else:
             self.logger.error("invalid chat data at {}".format(raw_data['id']))
-        
+
         ### random choice the task for this sample using torch
         task = random.choice(tasks)
         if task  == 's2s':
@@ -268,7 +269,7 @@ class SpeechDataset(DatasetTorch):
             # no interleave
             speech1 = chat_data[chat_idx * 2]['speech']
             speech2 = chat_data[chat_idx * 2 + 1]['speech']
-            
+
             res = self.prompter.generate_x2x_template(
                 modality1_str=speech1,
                 modality2_str=speech2,
@@ -277,9 +278,9 @@ class SpeechDataset(DatasetTorch):
         else:
             chat_idx = random.choice(range(len(chat_data)))
             text = chat_data[chat_idx]['text']
-            
+
             speech = chat_data[chat_idx]['speech']
-            
+
             if task == 't2s':
                 res = self.prompter.generate_t2x_template(
                     modality_str=speech,
@@ -297,7 +298,7 @@ class SpeechDataset(DatasetTorch):
 
 
 class ITDataset(DatasetTorch):
-    def __init__(self, 
+    def __init__(self,
                 data_path: str,
                 tokenizer: transformers.PreTrainedTokenizer,
                 data_args: DataArguments,
@@ -328,31 +329,31 @@ class ITDataset(DatasetTorch):
     def train_test_split(dataset, test_size=100, shuffle=True, random_state=None):
         if random_state is not None:
             random.seed(random_state)
-        
+
         # print('len(dataset it):', len(dataset.raw_dataset))
         indices = list(range(len(dataset.raw_dataset)))
         if shuffle:
             random.shuffle(indices)
-        
+
         if test_size < 1:
             test_size = int(test_size * len(dataset))
         elif test_size >= len(dataset)-32:
             test_size = len(dataset) - 32
-            
+
         test_raw_size = test_size // 10
         # print('test_raw_size:', test_raw_size)
         split = len(dataset.raw_dataset) - test_raw_size
         train_indices = indices[:split]
         test_indices = indices[split:]
-        
+
         raw_dataset_train = dataset.raw_dataset.select(train_indices)
         raw_dataset_test = dataset.raw_dataset.select(test_indices)
         train_data = ITDataset('', raw_dataset=raw_dataset_train, tokenizer=dataset.tokenizer, data_args=dataset.data_args, logger=dataset.logger, prompter=dataset.prompter)
         test_data = ITDataset('', raw_dataset=raw_dataset_test, tokenizer=dataset.tokenizer, data_args=dataset.data_args, logger=dataset.logger, prompter=dataset.prompter)
-        
+
         return {'train': train_data, 'test': test_data}
 
-    def tokenize_func(self, sentence, add_eos_token=True):  
+    def tokenize_func(self, sentence, add_eos_token=True):
         result = self.tokenizer(
             sentence,
             truncation=True,
@@ -375,10 +376,10 @@ class ITDataset(DatasetTorch):
         round_id = i % 10
         raw_data = self.raw_dataset[idx]
         chat_data = raw_data['chat']
-        if round_id == 9:
+        if True:
             tasks = ['t2s', 's2t']
-        else:
-            tasks = ['t2s', 's2t', 's2s']
+        # else:
+        #     tasks = ['t2s', 's2t', 's2s']
         ### random choice the task for this sample using torch
         task = random.choice(tasks)
         if task  == 's2s':
@@ -393,9 +394,9 @@ class ITDataset(DatasetTorch):
                 modality="speech"
             )
         else:
-            
+
             text = chat_data[round_id]['speech_text']
-            
+
             speech = chat_data[round_id]['speech']
             speech = modality_tokens_to_string(speech, modality="speech")
             if task == 't2s':
@@ -415,7 +416,7 @@ class ITDataset(DatasetTorch):
 
 
 class MotionDataset(DatasetTorch):
-    def __init__(self, 
+    def __init__(self,
                  data_path: str,
                 tokenizer: transformers.PreTrainedTokenizer,
                 data_args: DataArguments,
@@ -445,11 +446,11 @@ class MotionDataset(DatasetTorch):
     def train_test_split(dataset, test_size=100, shuffle=True, random_state=None):
         if random_state is not None:
             random.seed(random_state)
-        
+
         indices = list(range(len(dataset)))
         if shuffle:
             random.shuffle(indices)
-        
+
         if test_size < 1:
             test_size = int(test_size * len(dataset))
         elif test_size >= len(dataset)-32:
@@ -457,15 +458,15 @@ class MotionDataset(DatasetTorch):
         split = len(dataset) - test_size
         train_indices = indices[:split]
         test_indices = indices[split:]
-        
+
         raw_dataset_train = dataset.raw_dataset.select(train_indices)
         raw_dataset_test = dataset.raw_dataset.select(test_indices)
         train_data = MotionDataset('', raw_dataset=raw_dataset_train, tokenizer=dataset.tokenizer, data_args=dataset.data_args, logger=dataset.logger, prompter=dataset.prompter)
         test_data = MotionDataset('', raw_dataset=raw_dataset_test, tokenizer=dataset.tokenizer, data_args=dataset.data_args, logger=dataset.logger, prompter=dataset.prompter)
-        
+
         return {'train': train_data, 'test': test_data}
 
-    def tokenize_func(self, sentence, add_eos_token=True):  
+    def tokenize_func(self, sentence, add_eos_token=True):
         result = self.tokenizer(
             sentence,
             truncation=True,
@@ -486,33 +487,33 @@ class MotionDataset(DatasetTorch):
     def __getitem__(self, i):
         raw_data = self.raw_dataset[i]
         chat_data = raw_data['chat']
-        
-        if len(chat_data) > 1:
+
+        if False:
             tasks = ['t2m', 'm2t', 'm2m']
-        elif len(chat_data) == 1:
+        elif True:
             tasks = ['t2m', 'm2t']
         else:
             self.logger.error("invalid chat data at {}".format(raw_data['id']))
-        
+
         ### random choice the task for this sample using torch
         task = random.choice(tasks)
         if task  == 'm2m':
             chat_idx = random.choice(range(len(chat_data)//2))
             # no interleave
-            
+
             body1 = chat_data[chat_idx * 2]['body']
             hand1 = chat_data[chat_idx * 2]['hand']
             trans1 = chat_data[chat_idx * 2]['trans']
             body2 = chat_data[chat_idx * 2 + 1]['body']
             hand2 = chat_data[chat_idx * 2 + 1]['hand']
-            
+
             motion1 = modality_tokens_to_string(trans1, modality="trans") + \
                 modality_tokens_to_string(body1, modality="body") + \
                     modality_tokens_to_string(hand1, modality="hand")
-            
+
             motion2 = modality_tokens_to_string(body2, modality="body") + \
                     modality_tokens_to_string(hand2, modality="hand")
-            
+
             res = self.prompter.generate_x2x_template(
                 modality1_str=motion1,
                 modality2_str=motion2,
@@ -521,11 +522,11 @@ class MotionDataset(DatasetTorch):
         else:
             chat_idx = 0
             text = random.choice(chat_data[chat_idx]['text'])
-            
+
             body = chat_data[chat_idx]['body']
             hand = chat_data[chat_idx]['hand']
             trans = chat_data[chat_idx]['trans']
-            
+
             if task == 't2m':
                 motion = modality_tokens_to_string(body, modality="body") + \
                     modality_tokens_to_string(hand, modality="hand")
@@ -561,11 +562,11 @@ class WeightedDataset(DatasetTorch):
 
     def __len__(self):
         return self.total_length
-        
+
 
     def __getitem__(self, index):
         self.count += 1
-        
+
         ### warm up ration of motion
         data_warm_up_ratio = 0.5
         motion_weight = self.count / (data_warm_up_ratio * self.total_length)
@@ -574,7 +575,7 @@ class WeightedDataset(DatasetTorch):
         new_ratios[0] *=  motion_weight
         sum_ratio = sum(new_ratios)
         new_ratios = [ratio / sum_ratio for ratio in new_ratios]
-        
+
         ### sample dataset
         weights_len = []
         motion_len = self.total_length * new_ratios[0]
@@ -582,7 +583,7 @@ class WeightedDataset(DatasetTorch):
         motion_weight_lens = [x / sum(motion_weight_lens) for x in motion_weight_lens]
         motion_weight_lens = [x * motion_len for x in motion_weight_lens]
         weights_len += motion_weight_lens
-        
+
         speech_len = self.total_length * new_ratios[1]
         speech_weight_lens = [len(dataset) for dataset in self.datasets['speech']]
         speech_weight_lens = [x / sum(speech_weight_lens) for x in speech_weight_lens]
@@ -590,7 +591,7 @@ class WeightedDataset(DatasetTorch):
         weights_len += speech_weight_lens
 
         weights_norm = [x / sum(weights_len) for x in weights_len]
-        
+
         sampled_dataset = random.choices(self.dataset_list, weights=weights_norm, k=1)[0]
         data_id = index % len(sampled_dataset)
         return sampled_dataset[data_id]
@@ -600,15 +601,15 @@ def train():
     parser = HfArgumentParser((ModelArguments, DataArguments, TrainingArguments))
     model_args, data_args, training_args = parser.parse_args_into_dataclasses()
 
-    logger = get_logger(local_rank=training_args.local_rank, 
-                        save_path=os.path.join(training_args.output_dir, 'train.log'), 
+    logger = get_logger(local_rank=training_args.local_rank,
+                        save_path=os.path.join(training_args.output_dir, 'train.log'),
                         log_level='debug')
 
     logger.warning(
         f"Process rank: {training_args.local_rank}, device: {training_args.device}, n_gpu: {training_args.n_gpu}"
         + f"distributed training: {bool(training_args.local_rank != -1)}, 16-bits training: {training_args.fp16}"
     )
-    
+
     last_checkpoint = None
     if os.path.isdir(training_args.output_dir) and not training_args.overwrite_output_dir:
         last_checkpoint = get_last_checkpoint(training_args.output_dir)
@@ -622,24 +623,17 @@ def train():
                 f"Checkpoint detected, resuming training at {last_checkpoint}. To avoid this behavior, change "
                 "the `--output_dir` or add `--overwrite_output_dir` to train from scratch."
             )
-    
+
     prompter = Prompter()
-    
-    tokenizer = LlamaTokenizer.from_pretrained(
-        model_args.model_name_or_path,
-        model_max_length=training_args.model_max_length,
-        padding_side="right",
-        use_fast=False,
-    )
-    tokenizer.pad_token_id = (
-        0  # unk. we want this to be different from the eos token
-    )
+
+    tokenizer = AutoTokenizer.from_pretrained('google/gemma-3-4b-pt', trust_remote_code=True)
+  
     tokenizer.padding_side = "left"  # Allow batched inference
-    for token in [user_name, chatbot_name, user_end, chatbot_end]:
-        if token not in tokenizer.get_vocab():
-            logger.info(f"Add special unit tokens {token} to tokenizer.vocab")
-            tokenizer.add_tokens([token])
-    
+    # for token in [user_name, chatbot_name, user_end, chatbot_end]:
+    #     if token not in tokenizer.get_vocab():
+    #         logger.info(f"Add special unit tokens {token} to tokenizer.vocab")
+    #         tokenizer.add_tokens([token])
+
     for modality in modal_special_str.keys():
         prefix=modal_special_str[modality]["prefix"]
         start=modal_special_str[modality]["sos"]
@@ -650,13 +644,33 @@ def train():
             tokens = [f"<{prefix}{x}>" for x in range(modality_vocab_size)]
             if start != '':
                 tokens += [start, end]
-            tokenizer.add_tokens(tokens)
+            tokenizer.add_tokens(tokens, True)
 
-    model = LlamaForCausalLM.from_pretrained(
-        model_args.model_name_or_path,
-        torch_dtype=torch.float16,
+    if torch.cuda.get_device_capability()[0] >= 8:
+        torch_dtype = torch.bfloat16
+    else:
+        torch_dtype = torch.float16
+
+    # Define model init arguments
+    model_kwargs = dict(
+        attn_implementation="eager", # Use "flash_attention_2" when running on Ampere or newer GPU
+        torch_dtype=torch_dtype, # What torch dtype to use, defaults to auto
+        # device_map="auto", # Let torch decide how to load the model
     )
-    
+
+    # BitsAndBytesConfig: Enables 4-bit quantization to reduce model size/memory usage
+    model_kwargs["quantization_config"] = BitsAndBytesConfig(
+        load_in_4bit=True,
+        bnb_4bit_use_double_quant=True,
+        bnb_4bit_quant_type='nf4',
+        bnb_4bit_compute_dtype=model_kwargs['torch_dtype'],
+        bnb_4bit_quant_storage=model_kwargs['torch_dtype'],
+    )
+
+    # Load model and tokenizer
+    model = AutoModelForImageTextToText.from_pretrained("google/gemma-3-4b-pt", **model_kwargs)
+ 
+
     # resize embedding
     embedding_size = model.get_input_embeddings().weight.shape[0]
     if len(tokenizer) > embedding_size:
@@ -669,10 +683,10 @@ def train():
             def make_inputs_require_grad(module, input, output):
                 output.requires_grad_(True)
             model.get_input_embeddings().register_forward_hook(make_inputs_require_grad)
-    
+
     # model = None
-    
-    
+
+
     if data_args.block_size is None:
         block_size = tokenizer.model_max_length
         if block_size > 4096:
@@ -689,7 +703,7 @@ def train():
                 f"({tokenizer.model_max_length}). Using block_size={tokenizer.model_max_length}."
             )
         block_size = min(data_args.block_size, tokenizer.model_max_length)
-    
+
 
     if data_args.speech_data_path is not None:
         speech_data_paths = data_args.speech_data_path.split(" ")
@@ -714,7 +728,7 @@ def train():
         # speech_train_data = speech_train_data.shuffle(seed=42)
         speech_val_data = {}
         for speech_dataset_name, speech_val_dataset in zip(speech_dataset_names, speech_val_datasets):
-            speech_val_data[speech_dataset_name] = speech_val_dataset     
+            speech_val_data[speech_dataset_name] = speech_val_dataset
 
     if data_args.motion_data_path is not None:
         motion_data_paths = data_args.motion_data_path.split(" ")
@@ -741,46 +755,45 @@ def train():
                 motion_val_dataset_names.append(motion_data_path.split("/")[-1].split(".")[0])
         motion_val_data = {}
         for motion_dataset_name, motion_val_dataset in zip(motion_val_dataset_names, motion_val_datasets):
-            motion_val_data[motion_dataset_name] = motion_val_dataset   
+            motion_val_data[motion_dataset_name] = motion_val_dataset
 
-    if data_args.it_data_path is not None:
-        it_data_paths = data_args.it_data_path.split(" ")
-        it_train_datasets = []
-        it_val_datasets = []
-        it_val_dataset_names = []
-        for it_data_path in it_data_paths:
-            it_dataset = ITDataset(it_data_path, tokenizer, data_args, logger, prompter)
-            it_file_name = it_data_path.split('/')[-1]
-            if training_args.val_set_size > 0:
-                train_val = ITDataset.train_test_split(it_dataset, test_size=training_args.val_set_size, shuffle=True, random_state=42)
-                val_data = train_val["test"]
-                train_data = train_val["train"]
-            else:
-                val_data = None
-                train_data = it_dataset
+    # if data_args.it_data_path is not None:
+    #     it_data_paths = data_args.it_data_path.split(" ")
+    #     it_train_datasets = []
+    #     it_val_datasets = []
+    #     it_val_dataset_names = []
+    #     for it_data_path in it_data_paths:
+    #         it_dataset = ITDataset(it_data_path, tokenizer, data_args, logger, prompter)
+    #         it_file_name = it_data_path.split('/')[-1]
+    #         if training_args.val_set_size > 0:
+    #             train_val = ITDataset.train_test_split(it_dataset, test_size=training_args.val_set_size, shuffle=True, random_state=42)
+    #             val_data = train_val["test"]
+    #             train_data = train_val["train"]
+    #         else:
+    #             val_data = None
+    #             train_data = it_dataset
 
-            if train_data is not None:
-                it_train_datasets.append(train_data)
-            if val_data is not None:
-                it_val_datasets.append(val_data)
-                it_val_dataset_names.append(it_data_path.split("/")[-1].split(".")[0])
-        it_val_data = {}
-        for it_dataset_name, it_val_dataset in zip(it_val_dataset_names, it_val_datasets):
-            it_val_data[it_dataset_name] = it_val_dataset
-            
+    #         if train_data is not None:
+    #             it_train_datasets.append(train_data)
+    #         if val_data is not None:
+    #             it_val_datasets.append(val_data)
+    #             it_val_dataset_names.append(it_data_path.split("/")[-1].split(".")[0])
+    #     it_val_data = {}
+    #     for it_dataset_name, it_val_dataset in zip(it_val_dataset_names, it_val_datasets):
+    #         it_val_data[it_dataset_name] = it_val_dataset
 
 
-    if data_args.speech_data_path is not None and data_args.motion_data_path is not None and data_args.it_data_path is not None:
+
+    if data_args.speech_data_path is not None and data_args.motion_data_path is not None:
         train_datasets = {
             'motion': motion_train_datasets,
-            'speech': speech_train_datasets + it_train_datasets,
+            'speech': speech_train_datasets,
         }
         ratios = [0.4, 0.6]
         train_data = WeightedDataset(train_datasets, ratios)
         val_data_dict = {}
         val_data_dict.update(motion_val_data)
         val_data_dict.update(speech_val_data)
-        val_data_dict.update(it_val_data)
         val_data = val_data_dict
         pass
     elif data_args.speech_data_path is not None:
@@ -789,20 +802,20 @@ def train():
     else:
         exception_str = "motion_data_path and speech_data_path cannot be both None"
         logger.error(exception_str)
-    
-    
+
+
     data_collator = DataCollatorForSeq2Seq(
         tokenizer, pad_to_multiple_of=8, return_tensors="pt", padding=True
     )
     logger.info(f"start training")
-    
-    
+
+
     trainer = Trainer(
-        model=model, 
-        tokenizer=tokenizer, 
-        args=training_args, 
-        train_dataset=train_data if training_args.do_train else None, 
-        eval_dataset=val_data if training_args.do_eval else None, 
+        model=model,
+        tokenizer=tokenizer,
+        args=training_args,
+        train_dataset=train_data if training_args.do_train else None,
+        eval_dataset=val_data if training_args.do_eval else None,
         data_collator=data_collator
     )
 

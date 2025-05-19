@@ -25,9 +25,7 @@ class MotionGPT(BaseModel):
                  cfg,
                  datamodule,
                  lm,
-                 motion_vae_body,
-                 motion_vae_hand=None,
-                 motion_vae_transform=None,
+                 motion_vae,
                  codebook_size=512,
                  stage='vae',
                  debug=True,
@@ -42,46 +40,20 @@ class MotionGPT(BaseModel):
         
         self.cfg = cfg
         # Instantiate motion tokenizer
-
-        if self.cfg.EXPER.motion_part == 'body_hand_sep':
-            if motion_vae_hand is None:
-                raise ValueError("motion_vae_hand should not be None")
-            else:
-                if self.cfg.EXPER.motion_repre == 'global cont6d':
-                    motion_vae_hand['params']['nfeats'] = 180
-                    motion_vae_body['params']['nfeats'] = 153
-                elif self.cfg.EXPER.motion_repre == 'local cont6d':
-                    motion_vae_hand['params']['nfeats'] = 180
-                    motion_vae_body['params']['nfeats'] = 135                   
-                else:
-                    motion_vae_hand['params']['nfeats'] = 360
-                    motion_vae_body['params']['nfeats'] = 263
-                self.vae_hand = instantiate_from_config(motion_vae_hand)
-                self.vae_body = instantiate_from_config(motion_vae_body)
-        else:
-            self.vae_body = instantiate_from_config(motion_vae_body)
-            self.vae_hand = None
-        
-        if self.cfg.EXPER.transform and motion_vae_transform is not None:
-            self.vae_transform = instantiate_from_config(motion_vae_transform)
-        else:
-            self.vae_transform = None
+        if motion_vae != None:
+            self.vae = instantiate_from_config(motion_vae)
+       
         # # TODO
         # self.vae_transform = None
         # Instantiate motion-language model
         self.lm = instantiate_from_config(lm)
-        if self.cfg.EXPER.motion_repre != 'ske':
-            self.get_smplx_model()
+  
 
         # Freeze the motion tokenizer for lm training
         if 'lm' in self.hparams.stage:
-            self.vae_body.training = False
-            for p in self.vae_body.parameters():
+            self.vae.training = False
+            for p in self.vae.parameters():
                 p.requires_grad = False
-            if self.vae_hand is not None:
-                self.vae_hand.training = False
-                for p in self.vae_hand.parameters():
-                    p.requires_grad = False
         
         # Instantiate the losses
         self._losses = torch.nn.ModuleDict({

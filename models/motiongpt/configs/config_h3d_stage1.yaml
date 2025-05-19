@@ -11,8 +11,8 @@ TRAIN:
   BATCH_SIZE: 256 # Size of batches
   END_EPOCH: 999999 # End epoch
   RESUME: 'experiments/mgpt/VQVAE_G1ML3D_1' # Resume training from this path
-  PRETRAINED: 'models/motiongpt/experiments/mgpt/VQVAE_G1ML3D_1/checkpoints/epoch=12999-v1.ckpt' # Preatrained model path
-  PRETRAINED_VAE: 'models/motiongpt/experiments/mgpt/VQVAE_G1ML3D_1/checkpoints/epoch=12999-v1.ckpt' # Preatrained model path
+  PRETRAINED: '/root/pengyang/codebase/SOLAMI/models/motiongpt/experiments/mgpt/VQVAE_G1ML3D_1/checkpoints/epoch=12999-v1.ckpt' # Preatrained model path
+  PRETRAINED_VAE: '/root/pengyang/codebase/SOLAMI/models/motiongpt/experiments/mgpt/VQVAE_G1ML3D_1/checkpoints/epoch=12999-v1.ckpt' # Preatrained model path
 
   OPTIM:
     target: AdamW

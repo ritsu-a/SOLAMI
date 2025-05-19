@@ -14,8 +14,8 @@ DATASET:
     SPLIT_ROOT: datasets/kit-ml # KIT splits directory
     MEAN_STD_PATH: deps/t2m/
   HUMANML3D:
-    ROOT: SOLAMI_data/HumanML3D/HumanML3D # HumanML3D directory
-    SPLIT_ROOT: SOLAMI_data/HumanML3D/HumanML3D # HumanML3D splits directory
+    ROOT: /root/pengyang/codebase/SOLAMI/SOLAMI_data/HumanML3D # HumanML3D directory
+    SPLIT_ROOT: /root/pengyang/codebase/SOLAMI/SOLAMI_data/HumanML3D # HumanML3D splits directory
     MEAN_STD_PATH: deps/t2m/
     SCRIPTS_PATH: datasets/Inter_Synth_HumanML3D/motion_pairs.csv
 

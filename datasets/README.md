@@ -58,7 +58,7 @@ Then you should download the AnyGPT model in direction `extra`.
 We pre-tokenize the speech data for easy post-processing.
 
 ```
-python speech_commonvoice_tokenization.py --part 0 --period 4 --gpu_id 0
+python datasets/audio_dataset/speech_commonvoice_tokenization.py --part 0 --period 8 --gpu_id 0
 python speech_instruct_tokenization.py --part 0 --period 4 --gpu_id 0
 ```
 After that, please merge the data together.

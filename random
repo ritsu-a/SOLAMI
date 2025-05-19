@@ -1,3 +1,9 @@
 bash models/vla/scripts/stage1_pretrain_multinode_no_srun.sh 
 
 
+cd  models/motiongpt/ & python scripts/get_motion_code_for_7Bpretrain.py --cfg configs/config_h3d_stage1.yaml
+
+
+
+generate audio tokens:
+python datasets/audio_dataset/speech_commonvoice_tokenization.py --part 7 --period 8 --gpu_id 7

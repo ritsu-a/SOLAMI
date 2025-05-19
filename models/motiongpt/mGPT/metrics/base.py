@@ -39,14 +39,14 @@ class BaseMetrics(nn.Module):
         #             dist_sync_on_step=cfg.METRIC.DIST_SYNC_ON_STEP,
         #             task=cfg.model.params.task,
         #         )
-        if 'MTMetrics' in cfg.METRIC.TYPE:
-            self.MTMetrics = MTMetrics(
-                cfg=cfg,
-                dataname=datamodule.name,
-                w_vectorizer=datamodule.hparams.w_vectorizer,
-                dist_sync_on_step=cfg.METRIC.DIST_SYNC_ON_STEP,
-                diversity_times=30 if debug else cfg.METRIC.DIVERSITY_TIMES,
-            )
+        # if 'MTMetrics' in cfg.METRIC.TYPE:
+        #     self.MTMetrics = MTMetrics(
+        #         cfg=cfg,
+        #         dataname=datamodule.name,
+        #         w_vectorizer=datamodule.hparams.w_vectorizer,
+        #         dist_sync_on_step=cfg.METRIC.DIST_SYNC_ON_STEP,
+        #         diversity_times=30 if debug else cfg.METRIC.DIVERSITY_TIMES,
+        #     )
         if 'MRMetrics' in cfg.METRIC.TYPE:
             self.MRMetrics = MRMetrics(
                 njoints=njoints,

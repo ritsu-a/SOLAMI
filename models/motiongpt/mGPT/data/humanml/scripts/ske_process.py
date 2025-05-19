@@ -9,9 +9,9 @@ import argparse
 import copy
 from os.path import join as pjoin
 
-from common.skeleton import Skeleton
-from common.quaternion import *
-from paramUtil import *
+from ..common.skeleton import Skeleton
+from ..common.quaternion import *
+from ..utils.paramUtil import *
 import torch
 import torch.nn.functional as F
 

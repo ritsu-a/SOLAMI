@@ -30,13 +30,17 @@ from tqdm import tqdm
 
 # merge commonvoice 
 commonvoice_paths = [
-    "SOLAMI_data/audio/commonvoice_processed/commonvoice_0_4_150000.jsonl",
-    "SOLAMI_data/audio/commonvoice_processed/commonvoice_1_4_150000.jsonl",
-    "SOLAMI_data/audio/commonvoice_processed/commonvoice_2_4_150000.jsonl",
-    "SOLAMI_data/audio/commonvoice_processed/commonvoice_3_4_150000.jsonl",
+    "/root/pengyang/codebase/SOLAMI/SOLAMI_data/audio/commonvoice_processed/commonvoice_0_8_150000.jsonl",
+    "/root/pengyang/codebase/SOLAMI/SOLAMI_data/audio/commonvoice_processed/commonvoice_1_8_150000.jsonl",
+    "/root/pengyang/codebase/SOLAMI/SOLAMI_data/audio/commonvoice_processed/commonvoice_2_8_150000.jsonl",
+    "/root/pengyang/codebase/SOLAMI/SOLAMI_data/audio/commonvoice_processed/commonvoice_3_8_150000.jsonl",
+    "/root/pengyang/codebase/SOLAMI/SOLAMI_data/audio/commonvoice_processed/commonvoice_4_8_150000.jsonl",
+    "/root/pengyang/codebase/SOLAMI/SOLAMI_data/audio/commonvoice_processed/commonvoice_5_8_150000.jsonl",
+    "/root/pengyang/codebase/SOLAMI/SOLAMI_data/audio/commonvoice_processed/commonvoice_6_8_150000.jsonl",
+    "/root/pengyang/codebase/SOLAMI/SOLAMI_data/audio/commonvoice_processed/commonvoice_7_8_150000.jsonl",
 ]
 
-output_path = "SOLAMI_data/audio/commonvoice_processed/commonvoice_merged.jsonl"
+output_path = "/root/pengyang/codebase/SOLAMI/SOLAMI_data/audio/commonvoice_processed/commonvoice_merged.jsonl"
 
 data_items = []
 

@@ -34,30 +34,26 @@ def main():
     datasets = build_data(cfg, phase='token')
     print("datasets module initialized")
     output_dir = os.path.join(datasets.hparams.data_root, cfg.DATASET.CODE_PATH)
-    motion_type = cfg['EXPER']['motion_repre']
-    motion_part = cfg['EXPER']['motion_part']
-    output_dir = os.path.join("SOLAMI_data/tmp_data/pretrain_new_tokens", motion_type + '_' + motion_part)
+    # motion_type = cfg['EXPER']['motion_repre']
+    # motion_part = cfg['EXPER']['motion_part']
+    output_dir = os.path.join("/root/pengyang/codebase/SOLAMI/SOLAMI_data/tmp_data/pretrain_new_tokens", "g1body_280")
     output_dir = output_dir.replace(' ', '_')
     os.makedirs(output_dir, exist_ok=True)
 
     # create model
     model = build_model(cfg, datasets)
-    # if hasattr(model, "motion_vae"):
-    #     model.vae = model.motion_vae
-    # print("model loaded")
+    if hasattr(model, "motion_vae"):
+        model.vae = model.motion_vae
+    print("model loaded")
 
     # Strict load vae model
-    
-    if cfg.TRAIN.PRETRAINED:
-        load_pretrained(cfg, model)
-    
     assert cfg.TRAIN.PRETRAINED_VAE is not None
     load_pretrained_vae(cfg, model)
 
-    save_state_dir = "/root/pengyang/codebase/SOLAMI/extra/motion_tokenizer_final"
-    torch.save(model.vae_body.state_dict(), os.path.join(save_state_dir, 'body.pth'))
-    torch.save(model.vae_hand.state_dict(), os.path.join(save_state_dir, 'hand.pth'))
-    torch.save(model.vae_transform.state_dict(), os.path.join(save_state_dir, 'transform.pth'))
+    # save_state_dir = "/root/pengyang/codebase/SOLAMI/extra/motion_tokenizer_final"
+    # torch.save(model.vae_body.state_dict(), os.path.join(save_state_dir, 'body.pth'))
+    # torch.save(model.vae_hand.state_dict(), os.path.join(save_state_dir, 'hand.pth'))
+    # torch.save(model.vae_transform.state_dict(), os.path.join(save_state_dir, 'transform.pth'))
 
     model.eval()
     if cfg.ACCELERATOR == "gpu":
@@ -85,39 +81,21 @@ def main():
             if pose.shape[1] == 0:
                 continue
             try:
-                if model.vae_transform != None:
-                    code_pred_transform, _ = model.vae_transform.encode(batch['transform'].cuda().float())
-                else:
-                    code_pred_transform = None
                 
-                if model.vae_hand != None:
-                    code_pred_body, _ = model.vae_body.encode(pose[..., :model.vae_body.nfeats])
-                    code_pred_hand, _ = model.vae_hand.encode(pose[..., model.vae_body.nfeats:])
+                if False:pass
                 else:
-                    code_pred_body, _ = model.vae_body.encode(pose)
+                    code_pred_body, _ = model.vae.encode(pose)
             except Exception as e:
                 print(e)
                 continue
+            body_tokens = code_pred_body.cpu().numpy().tolist()[0]
             
             data_item = {
                 'id': motion_id,
-                'chat': []
+                'motion': body_tokens,
             }
-            
-            text = batch['all_captions'][0][:3]
-            body_tokens = code_pred_body.cpu().numpy().tolist()[0]
-            hand_tokens = code_pred_hand.cpu().numpy().tolist()[0]
-            trans_tokens = code_pred_transform.cpu().numpy().tolist()[0]
-            partner_id = batch['all_captions'][0][3]
-            data_item['chat'].append({
-                'text': text,
-                'body': body_tokens,
-                'hand': hand_tokens,
-                'trans': trans_tokens,
-                'motion_id': motion_id,})
-            if partner_id != None:
-                data_item['chat'].append({
-                    'motion_id': partner_id,})
+          
+          
             data_buffer.append(data_item)
             # motion_tokens = {'body': code_pred_body.cpu().numpy()}
             # if model.vae_hand != None:

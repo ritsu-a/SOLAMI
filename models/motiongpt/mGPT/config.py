@@ -74,14 +74,14 @@ def parse_args(phase="train"):
         "--cfg_assets",
         type=str,
         required=False,
-        default="/mnt/AFS_jiangjianping/projects/SEA/models/motiongpt/configs/assets.yaml",
+        default="/root/pengyang/codebase/SOLAMI/models/motiongpt/configs/assets.yaml",
         help="config file for asset paths",
     )
 
     # Default config
     if phase in ["train", "test", "demo"]:
         # cfg_defualt = "./configs/default.yaml"
-        cfg_defualt = "/mnt/AFS_jiangjianping/projects/SEA/models/motiongpt/configs/config_h3d_stage2_local_body_hand_sep_nointerleave.yaml"
+        cfg_defualt = "/root/pengyang/codebase/SOLAMI/models/motiongpt/configs/config_h3d_stage2_local_body_hand_sep_nointerleave.yaml"
     elif phase == "render":
         cfg_defualt = "./configs/render.yaml"
     elif phase == "webui":

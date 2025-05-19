@@ -1,4 +1,5 @@
 /data/
+SOLAMI_data
 .vscode/
 .VSCodeCounter/
 /output/
@@ -35,3 +36,4 @@ wandb/
 *.npy
 *.npz
 *.log
+

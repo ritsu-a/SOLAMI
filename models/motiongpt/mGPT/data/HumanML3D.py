@@ -29,7 +29,7 @@ class HumanML3DDataModule(BASEDataModule):
         # Basic info of the dataset
         cfg.DATASET.JOINT_TYPE = 'humanml3d'
         self.name = "humanml3d"
-        self.njoints = 22 if cfg.EXPER.motion_part == 'body' else 52
+        self.njoints = 22
         
         # Path to the dataset
         data_root = cfg.DATASET.HUMANML3D.ROOT
@@ -37,91 +37,14 @@ class HumanML3DDataModule(BASEDataModule):
         self.hparams.text_dir = pjoin(data_root, "texts")
         self.hparams.motion_dir = pjoin(data_root, 'new_joint_vecs')
         
-        mean_var_path = "SOLAMI_data/mean_variance/all_mean_variance_post.npz"
-        mean_var = np.load(mean_var_path, allow_pickle=True)
+        # Mean and std of the dataset
+        dis_data_root = "/root/pengyang/codebase/SOLAMI/SOLAMI_data/HumanML3D"
+        self.hparams.mean = np.load(pjoin(dis_data_root, "Mean.npy"))
+        self.hparams.std = np.load(pjoin(dis_data_root, "Std.npy"))
         
-        if self.cfg['EXPER']['motion_repre'] == 'ske':
-            motion = mean_var['ske_feature'].item()
-            # range(0, 4 + 21 * 3)
-            # range(4+51*3, 4+51*3+21*6)
-            # range (4+51*9, 4 + 51*9+22*3)
-            # range (4 + 51 * 9 + 52*3, 4 + 51 * 9 + 52*3 + 4)
-            body_index = list(range(0, 4+21*3)) + list(range(4+51*3, 4+51*3+21*6)) + \
-                list(range(4+51*9, 4+51*9+22*3)) + list(range(4+51*9+52*3, 4+51*9+52*3+4))
-            hand_index = list(range(4+21*3, 4+51*3)) + list(range(4+51*3+21*6, 4+51*9)) + \
-                list(range(4+51*9+22*3, 4+51*9+52*3))
-            if self.cfg['EXPER']['motion_part'] == 'body':
-                self.hparams.mean = motion['mean'][body_index]
-                self.hparams.std = motion['std'][body_index]
-            elif self.cfg['EXPER']['motion_part'] in ['body_hand_sep', 'body_hand_bind']:
-                self.hparams.mean = motion['mean'][body_index + hand_index]
-                self.hparams.std = motion['std'][body_index + hand_index]
-            else:
-                raise ValueError('Unknown motion part')
-        elif self.cfg['EXPER']['motion_repre'] == 'global cont6d':
-            motion_smplx = mean_var['smplx_feature'].item()
-            if self.cfg['EXPER']['motion_part'] == 'body':
-                self.hparams.mean = np.concatenate([motion_smplx['root_velocity']['mean'], 
-                                            motion_smplx['root_height']['mean'],
-                                            motion_smplx['global_root_cont6d']['mean'],
-                                            motion_smplx['cont6d_global']['mean'][:24].reshape(-1)], axis=0)
-                self.hparams.std = np.concatenate([motion_smplx['root_velocity']['std'],
-                                                    motion_smplx['root_height']['std'],
-                                                    motion_smplx['global_root_cont6d']['std'],
-                                                    motion_smplx['cont6d_global']['std'][:24].reshape(-1)], axis=0)
-            elif self.cfg['EXPER']['motion_part'] in ['body_hand_sep', 'body_hand_bind']:
-                self.hparams.mean = np.concatenate([motion_smplx['root_velocity']['mean'], 
-                                                    motion_smplx['root_height']['mean'],
-                                                    motion_smplx['global_root_cont6d']['mean'],
-                                                    motion_smplx['cont6d_global']['mean'].reshape(-1)], axis=0)
-                self.hparams.std = np.concatenate([motion_smplx['root_velocity']['std'],
-                                                    motion_smplx['root_height']['std'],
-                                                    motion_smplx['global_root_cont6d']['std'],
-                                                    motion_smplx['cont6d_global']['std'].reshape(-1)], axis=0)
-            else:
-                raise ValueError('Unknown motion part')
-        elif self.cfg['EXPER']['motion_repre'] == 'local cont6d':
-            motion_smplx = mean_var['smplx_feature'].item()
-            if self.cfg['EXPER']['motion_part'] == 'body':  
-                self.hparams.mean = np.concatenate([motion_smplx['root_velocity']['mean'], 
-                                            motion_smplx['root_height']['mean'],
-                                            motion_smplx['global_root_cont6d']['mean'],
-                                            motion_smplx['cont6d_local']['mean'][:21].reshape(-1)], axis=0)
-                self.hparams.std = np.concatenate([motion_smplx['root_velocity']['std'],
-                                                    motion_smplx['root_height']['std'],
-                                                    motion_smplx['global_root_cont6d']['std'],
-                                                    motion_smplx['cont6d_local']['std'][:21].reshape(-1)], axis=0)
-            elif self.cfg['EXPER']['motion_part'] in ['body_hand_sep', 'body_hand_bind']:
-                self.hparams.mean = np.concatenate([motion_smplx['root_velocity']['mean'], 
-                                            motion_smplx['root_height']['mean'],
-                                            motion_smplx['global_root_cont6d']['mean'],
-                                            motion_smplx['cont6d_local']['mean'].reshape(-1)], axis=0)
-                self.hparams.std = np.concatenate([motion_smplx['root_velocity']['std'],
-                                                    motion_smplx['root_height']['std'],
-                                                    motion_smplx['global_root_cont6d']['std'],
-                                                    motion_smplx['cont6d_local']['std'].reshape(-1)], axis=0)
-            else:
-                raise ValueError('Unknown motion part')
-        else:
-            raise ValueError('Unknown motion representation')
-        self.hparams.std = np.where(self.hparams.std == 0, 1e-9, self.hparams.std)
-        
-        
-        if self.cfg['EXPER']['transform'] == True:
-            transforms = mean_var['transforms'].item()
-            if self.cfg['EXPER']['motion_repre'] == 'ske':
-                self.hparams.transform_mean = np.concatenate([transforms['ske_relative_cont6d']['mean'], transforms['ske_relative_pos']['mean']], axis=0)
-                self.hparams.transform_std = np.concatenate([transforms['ske_relative_cont6d']['std'], transforms['ske_relative_pos']['std']], axis=0)
-            else:
-                self.hparams.transform_mean = np.concatenate([transforms['smplx_relative_cont6d']['mean'], transforms['smplx_relative_pos']['mean']], axis=0)
-                self.hparams.transform_std = np.concatenate([transforms['smplx_relative_cont6d']['std'], transforms['smplx_relative_pos']['std']], axis=0)
-            # self.hparams.transform_std = np.where(self.hparams.transform_std == 0, 1e-9, self.hparams.transform_std)
-            self.hparams.transform_std = self.hparams.transform_std[[0, 2, 6, 7, 8]]
-            self.hparams.transform_mean_all = self.hparams.transform_mean
-            self.hparams.transform_mean = self.hparams.transform_mean[[0, 2, 6, 7, 8]]
-        else:
-            self.hparams.transform_mean = None
-            self.hparams.transform_std = None
+        # Mean and std for fair evaluation
+        self.hparams.mean_eval = self.hparams.mean 
+        self.hparams.std_eval = self.hparams.std
         
         
         # Length of the dataset
@@ -140,7 +63,7 @@ class HumanML3DDataModule(BASEDataModule):
             if cfg.model.params.motion_vae.target.split('.')[-1].lower() == "vqvae":
                 self.hparams.win_size = 64
                 self.Dataset = MotionDatasetVQ
-                self.DatasetEval = Text2MotionVQDatasetEval
+                self.DatasetEval = Text2MotionDatasetEval
             else:
                 self.Dataset = MotionDataset
         elif 'lm' in cfg.TRAIN.STAGE:
@@ -148,15 +71,12 @@ class HumanML3DDataModule(BASEDataModule):
             self.hparams.task_path = cfg.DATASET.TASK_PATH
             self.hparams.std_text = cfg.DATASET.HUMANML3D.STD_TEXT
             self.Dataset = Text2MotionDatasetCB
-            if hasattr(self.hparams.cfg.TRAIN, "TASK") and self.hparams.cfg.TRAIN.TASK == "interaction":
-                self.Dataset = InterSynthDatasetCB
-                self.DatasetEval = InterSynthDatasetCB
-                self.hparams.scripts_path = cfg.DATASET.HUMANML3D.SCRIPTS_PATH
+           
         elif cfg.TRAIN.STAGE == "token":
             # self.Dataset = Text2MotionDatasetToken
             # self.DatasetEval = Text2MotionDatasetToken
-            self.Dataset = Text2MotionVQDatasetToken
-            self.DatasetEval = Text2MotionVQDatasetToken
+            self.Dataset = Text2MotionDatasetToken
+            self.DatasetEval = Text2MotionDatasetToken
         elif cfg.TRAIN.STAGE == "m2t":
             self.Dataset = Text2MotionDatasetM2T
             self.DatasetEval = Text2MotionDatasetM2T
@@ -168,44 +88,12 @@ class HumanML3DDataModule(BASEDataModule):
         self.nfeats = self._sample_set.nfeats
         cfg.DATASET.NFEATS = self.nfeats
         
-    def revserse_ric_data(self, data):
-        # index from all data to body and hands
-        body_index = list(range(0, 4+21*3)) + list(range(4+51*3, 4+51*3+21*6)) + \
-                list(range(4+51*9, 4+51*9+22*3)) + list(range(4+51*9+52*3, 4+51*9+52*3+4))
-        hand_index = list(range(4+21*3, 4+51*3)) + list(range(4+51*3+21*6, 4+51*9)) + \
-            list(range(4+51*9+22*3, 4+51*9+52*3))
-            
-        all_index_to_feat = body_index + hand_index
-        ## get the index of each item in all_index_to_feat
-        all_feat_to_ric = {}
-        for i, item in enumerate(all_index_to_feat):
-            all_feat_to_ric[item] = i
-        # sort the dicts by key, ascending
-        all_feat_to_ric = dict(sorted(all_feat_to_ric.items(), key=lambda item: item[0]))
-        
-        reverse_indices = list(all_feat_to_ric.values())
-        return data[..., reverse_indices]
 
     def feats2joints(self, features):
         mean = torch.tensor(self.hparams.mean).to(features)
         std = torch.tensor(self.hparams.std).to(features)
         features = features * std + mean
-        
-        if self.cfg.EXPER.motion_repre == 'ske':
-            if self.njoints > 25:
-                features = self.revserse_ric_data(features)
-            res = recover_from_ric(features, self.njoints)
-        elif self.cfg.EXPER.motion_repre == 'global cont6d':
-            res = recover_from_smplx_feature(features, 'global')
-            # res_test = process_smplx_feature(res, 'global')
-        elif self.cfg.EXPER.motion_repre == 'local cont6d':
-            res = recover_from_smplx_feature(features, 'local')
-            # res_test = process_smplx_feature(res.clone(), 'local')
-            # reconstruction error is normal, considering the padding sequence
-        else:
-            raise ValueError('Unknown motion representation')
-
-        return res
+        return recover_from_ric(features)
 
     def joints2feats(self, features):
         # TODO
@@ -230,9 +118,12 @@ class HumanML3DDataModule(BASEDataModule):
 
     def renorm4t2m(self, features):
         # renorm to t2m norms for using t2m evaluators
-        mean = torch.tensor(self.hparams.mean).to(features)
-        std = torch.tensor(self.hparams.std).to(features)
-        features = features * std + mean
+        ori_mean = torch.tensor(self.hparams.mean).to(features)
+        ori_std = torch.tensor(self.hparams.std).to(features)
+        eval_mean = torch.tensor(self.hparams.mean_eval).to(features)
+        eval_std = torch.tensor(self.hparams.std_eval).to(features)
+        features = features * ori_std + ori_mean
+        features = (features - eval_mean) / eval_std
         return features
 
     def mm_mode(self, mm_on=True):

@@ -88,7 +88,7 @@ def process_speech_data(part=0, period=4, gpu_id=0, maxlen=150000):
         text = line['sentence']
         role = 'user'
         try:
-            speech_path = os.path.join(speech_dir, line['path'] + '.mp3')
+            speech_path = os.path.join(speech_dir, line['path'])
             speech_code = encode_speech(speech_path, logger)
         except:
             logger.error(f"Error processing {speech_path}")

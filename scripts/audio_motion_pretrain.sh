@@ -8,7 +8,7 @@ METAROOT="fnlp/AnyGPT-base"
 # METAROOT="/root/pengyang/codebase/SOLAMI/models/vla/output_models/pretrain/checkpoint-10"
 DATAROOT="SOLAMI_data"
 
-OUTROOT="/root/pengyang/codebase/SOLAMI/models/vla/output_models/pretrain_audio_motion_final"
+OUTROOT="/root/pengyang/codebase/SOLAMI/output/pretrain_audio_motion_final"
 CACHEROOT="/root/pengyang/codebase/SOLAMI/models/vla/data/pretrain/cache"
 
 
@@ -17,10 +17,11 @@ motion_datasets="/root/pengyang/codebase/SOLAMI/SOLAMI_data/tmp_data/G1ML3D_toke
 
 
 
-# python -m torch.distributed.run  --nproc-per-node 8 \
-python  /root/pengyang/codebase/SOLAMI/models/vla/anygpt/train/audio_motion_pretrain.py \
-    --deepspeed "/root/pengyang/codebase/SOLAMI/models/vla/scripts/stage1_deepspeed.json" \
-    --run_name "audio_motion_pretrain_final" \
+CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7
+torchrun \
+    --nproc_per_node 8 \
+    /root/pengyang/codebase/SOLAMI/src/audio_motion_pretrain.py \
+    --run_name "audio_motion_pretrain_0515" \
     --model_name_or_path ${METAROOT} \
     --speech_data_path "${speech_datasets}" \
     --motion_data_path "${motion_datasets}" \
